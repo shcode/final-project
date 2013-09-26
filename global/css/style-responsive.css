@@ -16,6 +16,12 @@
 	.portfolio-responsive a.info {
 		margin-top:55px !important;
 	}
+
+	  /* When affixed, space properly */
+	  .affix-sidebar {
+	    top: 0;
+	    width: 220px;
+	  }		
 }
 @media (max-width: 767px) {
 	.portfolio-responsive h2 {
@@ -35,6 +41,7 @@
 	.collapse.in li a.dropdown-toggle { 
 		border:none;
 	}
+
 }
 
 @media (max-width: 980px) {
@@ -70,6 +77,13 @@
 	.da-thumbs li article em {
 		display:none !important;
 	}
+
+	  /* When affixed, space properly */
+	  .affix-sidebar {
+	    top: 0;
+	    width: 166px;
+	  }		
+
 }
 
 @media (max-width: 900px) {
@@ -91,6 +105,13 @@
 	{
 		height: auto;
 	}
+
+	  /* When affixed, space properly */
+	  .affix-sidebar {
+	    top: 0;
+	    width: 220px;
+	  }	
+
 }
 
 @media (max-width: 450px) {
@@ -126,6 +147,12 @@
 	.service .desc { width: 55%}
 
 	.contact-form .input-xlarge {width: 200px !important}
+
+	  /* When affixed, space properly */
+	  .affix-sidebar {
+	    top: 0;
+	    width: 166px;
+	  }		
 }
  
 /* Landscape phone to portrait tablet */
@@ -158,7 +185,18 @@
 	}
 	.coming-soon-copyright p {
 		text-align: left;
-	}					
+	}		
+
+	.affix-sidebar {
+	    width: auto;
+	    margin-bottom: 20px;		
+	}
+
+  .affix-sidebar.affix {
+    position: static;
+    width: auto;
+    top: 0;
+  }				
 }
  
 /* Landscape phones and down */

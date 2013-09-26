@@ -4,12 +4,14 @@ $route['*']['/'] = array('HomeController', 'index');
 $route['*']['/faq'] = array('HomeController', 'faq');
 $route['*']['/help'] = array('HomeController', 'help');
 $route['*']['/testimonial'] = array('HomeController', 'testimonial');
-$route['*']['/auction'] = array('HomeController', 'auction');
-$route['*']['/auction/:page'] = array('HomeController', 'auction');
-$route['*']['/rent'] = array('HomeController', 'rent');
-$route['*']['/rent/:page'] = array('HomeController', 'rent');
-$route['*']['/sell'] = array('HomeController', 'sell');
-$route['*']['/sell/:page'] = array('HomeController', 'sell');
+$route['*']['/lelang'] = array('HomeController', 'auction');
+$route['*']['/lelang/:page'] = array('HomeController', 'auction');
+$route['*']['/sewa'] = array('HomeController', 'rent');
+$route['*']['/sewa/:page'] = array('HomeController', 'rent');
+$route['*']['/jual'] = array('HomeController', 'sell');
+$route['*']['/jual/:page'] = array('HomeController', 'sell');
+$route['*']['/landingpage'] = array('HomeController', 'landing');
+
 
 //Login
 $route['*']['/login'] = array('LoginController', 'index');
@@ -20,24 +22,23 @@ $route['*']['/ggcallback'] = array('LoginController', 'ggcallback');
 
 //User
 $route['*']['/user'] = array('UserController', 'index');
-$route['*']['/user/profil/:id'] = array('UserController', 'view_profil');
+$route['*']['/user/profil'] = array('UserController', 'index');
+$route['*']['/user/profil/:username'] = array('UserController', 'view_profil');
 $route['*']['/user/edit'] = array('UserController', 'edit_profil');
-$route['*']['/user/report'] = array('UserController', 'user_report');
+$route['*']['/user/konfirmasi'] = array('UserController', 'konfirmasi');
 
 //Listing
-$route['*']['/listing'] = array('PropertiController', 'index');
-$route['*']['/listing/:page'] = array('PropertiController', 'index');
-$route['*']['/listing/view/:id'] = array('PropertiController', 'view_properti');
-$route['*']['/listing/edit/:id'] = array('PropertiController', 'edit_properti');
-$route['*']['/listing/cancel/:id'] = array('PropertiController', 'cancel_bid');
-$route['*']['/listing/bid/:id'] = array('PropertiController', 'view_bid');
-$route['*']['/listing/add/plan'] = array('PropertiController', 'plan');
-$route['*']['/listing/add/fillform/:id'] = array('PropertiController', 'form');
-$route['*']['/listing/upload/:id'] = 
-$route['*']['/listing/add/upload/:id'] = array('PropertiController', 'upload_img');
-$route['*']['/listing/add/up_proses'] = array('PropertiController', 'upload_action');
-$route['*']['/listing/add/confirm'] = array('PropertiController', 'confirmation');
-$route['*']['/listing/add/success'] = array('PropertiController', 'success');
+$route['*']['/listing'] = array('ListingController', 'index');
+$route['*']['/listing/:page'] = array('ListingController', 'index');
+$route['*']['/listing/view/:id'] = array('ListingController', 'view_properti');
+$route['*']['/listing/edit/:id'] = array('ListingController', 'edit_properti');
+$route['*']['/listing/cancel/:id'] = array('ListingController', 'cancel_bid');
+$route['*']['/listing/bid/:id'] = array('ListingController', 'view_bid');
+$route['*']['/listing/tambah'] = array('ListingController', 'add');
+$route['*']['/listing/tambah/step2'] = array('ListingController', 'add_step2');
+$route['*']['/listing/add/up_proses'] = array('ListingController', 'upload_action');
+$route['*']['/listing/add/confirm'] = array('ListingController', 'confirmation');
+$route['*']['/listing/add/success'] = array('ListingController', 'success');
 
 //Search
 $route['*']['/search'] = array('SearchController', 'index');
@@ -49,19 +50,18 @@ $route['*']['/history'] = array('HistoriController', 'index');
 $route['*']['/history/:page'] = array('HistoriController', 'index');
 
 //Register
-$route['*']['/register'] = array('RegisterController', 'index');
-$route['post']['/register/konfirmasi'] = array('RegisterController', 'confirm');
-$route['*']['/register/up_proses'] = array('RegisterController', 'upload_action');
-$route['post']['/register/up_sukses'] = array('RegisterController', 'upload_success');
-$route['*']['/register/upload'] = array('RegisterController', 'upload_id');
+$route['*']['/register'] = array('UserController', 'register');
+$route['*']['/register/cekuser'] = array('ProsesController', 'cek_user', 'extension' => array('.json'));
+$route['*']['/register/cekemail'] = array('ProsesController', 'cek_email', 'extension' => array('.json'));
 
 //Proses
-$route['post']['/register/check_user'] = array('ProsesController', 'cek_user');
-$route['post']['/register/check_email'] = array('ProsesController', 'cek_email');
-$route['get']['/process/getpropinsi'] = array('ProsesController', 'get_propinsi');
-$route['get']['/process/getkota'] = array('ProsesController', 'get_kota');
-$route['*']['/process/getimage/:id'] = array('ProsesController', 'get_image');
-$route['*']['/process/delimage/:nama'] = array('ProsesController', 'del_image');
+$route['get']['/proses/getpropinsi'] = array('ProsesController', 'get_propinsi');
+$route['get']['/proses/getkota'] = array('ProsesController', 'get_kota');
+$route['get']['/proses/getkecamatan'] = array('ProsesController', 'get_kecamatan');
+$route['*']['/proses/getimage/:id'] = array('ProsesController', 'get_image');
+$route['*']['/proses/delimage/:nama'] = array('ProsesController', 'del_image');
+$route['*']['/proses/upload'] = array('ProsesController', 'upload_image');
+$route['*']['/proses/delete/:id'] = array('ProsesController', 'delete_image');
 
 //Reputation
 $route['get']['/reputation'] = 

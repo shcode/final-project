@@ -1,0 +1,199 @@
+        <div class="container" style="margin-top:10px">             
+            <div class="row-fluid">
+                <form class="reg-page" id="reg-form" method="post">
+                    <!-- if isset({{error}}) --> 
+                    <div class="alert alert-error">
+                        <button type="button" class="close" data-hide="alert">&times;</button>
+                        <!-- loop error -->
+                            <label class="error">{{error' value}}</label>
+                        <!-- endloop -->
+                    <!-- else -->
+                    <div class="alert alert-error" style="display:none">
+                            <button type="button" class="close" data-hide="alert">&times;</button>
+                    <!-- endif -->
+                    </div>
+                    
+                    <!-- if isset({{info}}) -->
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-hide="alert">&times;</button>
+                        Listing berhasil dimasukkan. 
+                    </div>
+                    <!-- endif -->                                    
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <div class="headline"><h4>Infromasi Dasar</h4></div>
+                            <label>Judul Listing <span class="color-red">*</span></label>
+                            <input type="text" class="span12" name="title" autocomplete="off">
+                            <label>Deskripsi <span class="color-red">*</span></label>
+                            <textarea rows="5" class="span12" style="resize:vertical" name="description"></textarea>
+
+                            <div class="headline"><h4>Informasi Iklan</h4></div>
+                                <label>Jenis Iklan <span class="color-red">*</span></label>
+                                <select class="span12" name="listing_type" id="jenis">
+                                    <option class="req-price" value="Jual">Jual</option>
+                                    <option class="req-price" value="Sewa">Sewa</option>
+                                    <option value="Lelang">Lelang</option>
+                                </select>  
+
+                            <div class="controls" id="untuk-jual-sewa">                            
+                                <label>Harga <span class="color-red">*</span></label>
+                                <div class="input-prepend input-fullwidth">
+                                    <span class="add-on">Rp.</span>
+                                    <div class="input-wrapper"><input class="pull-rgt" type="text" class="span12" name="price"></div>
+                                </div>
+                            </div>
+                            <div class="controls controls-row" id="untuk-sewa" style="display:none">
+                                <label>Jangka Waktu <span class="color-red">*</span></label>
+                                <input type="text" name="range_value" class="span4">
+                                <select class="span8" name="range_time" id="jenis">
+                                    <option value="">Pilih Waktu</option>
+                                    <option value="Hari">Hari</option>
+                                    <option value="Minggu">Minggu</option>
+                                    <option value="Bulan">Bulan</option>
+                                    <option value="Tahun">Tahun</option>
+                                </select>  
+                            </div>
+                            <div id="untuk-lelang" style="display:none">               
+                                <label>Harga Awal <span class="color-red">*</span></label>
+                                <div class="input-prepend input-fullwidth">
+                                    <span class="add-on">Rp.</span>
+                                    <div class="input-wrapper"><input class="pull-rgt" type="text" name="start_price"></div>
+                                </div>
+                            
+                                <div class="controls">                        
+                                    <div class="span6">
+                                        <label>Harga Maximum</label>
+                                        <div class="input-prepend input-fullwidth" class="span12">
+                                            <span class="add-on">Rp.</span>
+                                            <div class="input-wrapper"><input class="pull-rgt" type="text" name="buy_now"></div>
+                                        </div>
+                                    </div>                                
+                                    <div class="span6">
+                                        <label>Minimal Bid <span class="color-red">*</span></label>
+                                        <div class="input-prepend input-fullwidth">
+                                            <span class="add-on">Rp.</span>
+                                            <div class="input-wrapper"><input class="pull-rgt" type="text" name="min_bid"></div>
+                                        </div>
+                                    </div>                          
+                                </div>
+                                <div class="controls">
+                                    <div class="span6">
+                                        <label>Waktu Mulai <span class="color-red">*</span></label>
+                                        <div class="controls controls-row">
+                                            <input type="text" class="datepicker span8" name="start_date1">
+                                            <input type="text" class="timepicker span4" name="start_date2">
+                                        </div>
+                                    </div>                                
+                                    <div class="span6">
+                                        <label>Waktu Berakhir <span class="color-red">*</span></label>
+                                        <div class="controls controls-row">
+                                            <input type="text" class="datepicker span8" name="end_date1">
+                                            <input type="text" class="timepicker span4" name="end_date2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="span6">
+                            <div class="headline"><h4>Informasi Tambahan</h4></div>
+                            <div class="controls">  
+                                <div class="span6">
+                                    <label>Jenis Properti <span class="color-red">*</span></label>
+                                    <select class="span12" name="type_id">
+                                        <option value="">Pilih Jenis</option>
+                                        <!-- loop jenis -->
+                                        <option value="{{jenis' v.@type_id}}">{{jenis' v.@type_name}}</option>
+                                        <!-- endloop -->
+                                    </select>
+                                </div>
+                                <div class="span6">                            
+                                    <label>Jumlah Lantai</label>
+                                    <input type="text" class="span12" name="floor">
+                                </div>                            
+                            </div>  
+                            <div class="controls">                                
+                                <div class="span6">                            
+                                    <label>Luas Tanah</label>
+                                    <div class="input-append input-block-level">
+                                        <input type="text" class="span12" name="land">
+                                        <span class="add-on">m²</span>
+                                    </div>
+                                </div>                                
+                                <div class="span6">                            
+                                    <label>Luas Bangunan</label>
+                                    <div class="input-append input-block-level">
+                                        <input type="text" class="span12" name="building">
+                                        <span class="add-on">m²</span>
+                                    </div>
+                                </div>                                
+                            </div>  
+                            <div class="controls">  
+                                <div class="span6">                            
+                                    <label>Jumlah Kamar Tidur</label>
+                                    <input type="text" class="span12" name="bed">
+                                </div>
+                                <div class="span6">                            
+                                    <label>Jumlah Kamar Mandi</label>
+                                    <input type="text" class="span12" name="bath">
+                                </div>                            
+                            </div>                             
+                            <div class="controls">  
+                                <div class="span6">                            
+                                    <label>Kamar Tidur Pembantu</label>
+                                    <input type="text" class="span12" name="maid_bed">
+                                </div>
+                                <div class="span6">                            
+                                    <label>Jumlah Kamar Mandi Pembantu</label>
+                                    <input type="text" class="span12" name="maid_bath">
+                                </div>                            
+                            </div>                              
+                            <div class="controls">  
+                                <div class="span6">                            
+                                    <label>Listrik</label>
+                                    <input type="text" class="span12" name="electricity">
+                                </div>
+                                <div class="span6">                            
+                                    <label>Sumber Air</label>
+                                    <input type="text" class="span12" name="water_source">
+                                </div>                            
+                            </div>   
+                            <div class="controls">                                
+                                <div class="span6">
+                                    <label>Sertifikat</label>
+                                    <select class="span12" name="certificate">
+                                        <option value="">Pilih Sertifikat</option>
+                                        <option value="Hak Milik">Hak Milik</option>
+                                        <option value="Hak Guna Bangunan">Hak Guna Bangunan</option>
+                                        <option value="Strata">Strata</option>
+                                        <option value="Girik">Girik</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>                           
+                                <div class="span6">                            
+                                    <label>Menghadap</label>
+                                    <select class="span12" name="orientate">
+                                        <option value="">Pilih Orientasi</option>
+                                        <option value="Utara">Utara</option>
+                                        <option value="Timur Laut">Timur Laut</option>
+                                        <option value="Timur">Timur</option>
+                                        <option value="Tenggara">Tenggara</option>
+                                        <option value="Selatan">Selatan</option>
+                                        <option value="Barat Daya">Barat Daya</option>
+                                        <option value="Barat">Barat</option>
+                                        <option value="Barat Laut">Barat Laut</option>
+                                    </select>
+                                </div>                                
+                            </div>
+                            <hr />
+                            <input type="submit" class="btn-u btn-block" name="submit" value="Step Berikutnya" />
+                            <p><small class="pull-right">*) harus diisi</small></p>                            
+                        </div>
+                    </div>
+                </form>
+            </div><!--/row-fluid-->
+        </div>
+<script src="{{rootUrl}}global/js/plugins/jquery.validate.min.js"></script>
+<script>
+$(document).ready(function(){$("[data-hide]").on("click",function(){$(this).closest("."+$(this).attr("data-hide")).hide()}),$("#reg-form").validate({groups:{start_date:"start_date1 start_date2",end_date:"end_date1 end_date2",range:"range_time range_value"},rules:{title:"required",description:"required",type_id:"required",listing_type:"required",land:{min:1},building:{min:1},bed:{min:1},bath:{min:1},maid_bed:{min:1},maid_bath:{min:1},electricity:{min:1},price:{required:"#jenis option:selected[class='req-price']",min:1},range_value:{required:"#jenis option:selected[value='Sewa']",min:1},range_time:{required:"#jenis option:selected[value='Sewa']"},start_price:{required:"#jenis option:selected[value='Lelang']",min:1},min_bid:{required:"#jenis option:selected[value='Lelang']",min:1},start_date1:{required:"#jenis option:selected[value='Lelang']"},start_date2:{required:"#jenis option:selected[value='Lelang']"},end_date1:{required:"#jenis option:selected[value='Lelang']"},end_date2:{required:"#jenis option:selected[value='Lelang']"}},messages:{title:"- Judul belum diisi.",description:"- Deskripsi belum diisi.",type_id:"- Jenis Properti harus diisi",listing_type:"- Jenis Iklan harus diisi",land:{min:"- Input untuk Luas Tanah salah."},building:{min:"- Input untuk Luas Bangunan salah."},bed:{min:"- Input untuk Jumlah Kamar Tidur salah."},bath:{min:"- Input untuk Jumlah Kamar Mandi salah."},maid_bed:{min:"- Input untuk Jumlah Kamar Tidur Pembantu salah."},maid_bath:{min:"- Input untuk Jumlah Kamar Mandi Pembantu salah."},electricity:{min:"- Input untuk Listrik salah."},price:{required:"- Harga belum diisi.",min:"- Input untuk Harga salah."},range_value:{required:"- Jangka Waktu belum diisi.",min:"- Input untuk Jangka Waktu salah."},range_time:{required:"- Jangka Waktu belum diisi."},start_price:{required:"- Harga Awal belum diisi.",min:"- Input untuk Harga Awal salah."},min_bid:{required:"- Minimal Bid belum diisi.",min:"- Input untuk Minimal Bid salah."},start_date1:{required:"- Waktu Mulai belum diisi."},start_date2:{required:"- Waktu Mulai belum diisi."},end_date1:{required:"- Waktu Berakhir belum diisi."},end_date2:{required:"- Waktu Berakhir belum diisi."}},errorLabelContainer:$(".alert"),onkeyup:!1,submitHandler:function(a){a.submit()}}),$("#jenis").change(function(){"Lelang"==$(this).val()?($("#untuk-lelang").show(),$("#untuk-jual-sewa").hide(),$("#untuk-sewa").hide(),$("#untuk-jual-sewa input").val(""),$("#untuk-sewa input").val("")):"Sewa"==$(this).val()?($("#untuk-lelang").hide(),$("#untuk-jual-sewa").show(),$("#untuk-sewa").show(),$("#untuk-lelang input").val("")):($("#untuk-lelang").hide(),$("#untuk-jual-sewa").show(),$("#untuk-sewa").hide(),$("#untuk-lelang input").val(""),$("#untuk-sewa input").val(""),$("#untuk-sewa select").val(""))}),$(".datepicker").datepicker({dateFormat:"yy-mm-dd"}),$(".timepicker").timepicker({})});
+</script>

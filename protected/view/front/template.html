@@ -10,6 +10,10 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         
+        <!-- if isset({{fineupload}}) -->
+        <link rel="stylesheet" href="{{rootUrl}}global/css/fineuploader/fineuploader.css">
+        <!-- endif -->        
+
         <link rel="stylesheet" href="{{rootUrl}}global/css/bootstrap.css">
         <link rel="stylesheet" href="{{rootUrl}}global/css/bootstrap-responsive.css">
         <link rel="stylesheet" href="{{rootUrl}}global/css/header.css">
@@ -20,6 +24,15 @@
         <link rel="stylesheet" href="{{rootUrl}}global/css/font-awesome.css">
         <link rel="stylesheet" href="{{rootUrl}}global/css/flexslider.css">
         <link rel="stylesheet" href="{{rootUrl}}global/css/parallax-slider.css">
+
+        <!-- if isset({{fancybox}}) -->
+        <link rel="stylesheet" href="{{rootUrl}}global/css/fancybox/jquery.fancybox.css">
+        <!-- endif -->
+
+        <!-- if isset({{timepicker}}) -->
+        <link rel="stylesheet" href="{{rootUrl}}global/css/jqui/jquery-ui.min.css">
+        <!-- endif -->
+
         <!--[if IE 7]>
             <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css">
         <![endif]-->
@@ -28,6 +41,9 @@
         <![endif]-->            
 
         <script src="{{rootUrl}}global/js/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{rootUrl}}global/js/plugins/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.js"></script>        
+        <script src="{{rootUrl}}global/js/plugins/bootstrap/bootstrap.min.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -42,13 +58,27 @@
 
         <!-- include "footer" -->
         
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-        <script>window.jQuery || document.write('<script src="{{rootUrl}}global/js/plugins/jquery-1.9.1.js"><\/script>')</script>
-        <script src="//code.jquery.com/jquery-migrate-1.2.1.js"></script>
+        <!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script-->
 
-        <script src="{{rootUrl}}global/js/plugins/bootstrap/bootstrap.min.js"></script>
         <script type="text/javascript" src="{{rootUrl}}global/js/plugins/jquery.flexslider-min.js"></script> 
         <script type="text/javascript" src="{{rootUrl}}global/js/plugins/jquery.cslider.js"></script> 
+
+        <!-- if isset({{timepicker}}) -->
+        <script src="{{rootUrl}}global/js/jqui/jquery-ui.min.js"></script>        
+        <script src="{{rootUrl}}global/js/jqui/jquery.ui.datepicker-id.min.js"></script>        
+        <script src="{{rootUrl}}global/js/jqui/jquery-ui-timepicker-addon.js"></script>
+        <!-- endif -->
+
+        <!-- if isset({{fineupload}}) -->
+        <script src="{{rootUrl}}global/js/plugins/fineuploader/fineuploader-3.6.4.js"></script>
+        <script src="{{rootUrl}}global/js/plugins/fineuploader/jquery-plugin.js"></script>
+        <script src="{{rootUrl}}global/js/plugins/fineuploader/jquery-dnd.js"></script>
+        <!-- endif -->
+
+        <!-- if isset({{fancybox}}) -->
+        <script src="{{rootUrl}}global/js/plugins/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>        
+        <script src="{{rootUrl}}global/js/plugins/fancybox/jquery.fancybox.pack.js"></script>
+        <!-- endif -->
 
         <script src="{{rootUrl}}global/js/main.js"></script>
         <script src="{{rootUrl}}global/js/app.js"></script>
@@ -60,13 +90,13 @@
                 App.initSliders();
                 Index.initParallaxSlider();
             });
-        </script>        
+        </script>
 
-        <script>
+        <!--script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
+        </script-->
     </body>
 </html>

@@ -36,7 +36,7 @@ if ($config['APP_MODE'] === 'dev')
     $config['TEMPLATE_COMPILE_ALWAYS'] = TRUE;
 
 //register functions to be used with your template files
-//$config['TEMPLATE_GLOBAL_TAGS'] = array('url', 'url2', 'time', 'isset', 'empty');
+//$config['TEMPLATE_GLOBAL_TAGS'] = array('url', 'url2', 'time', 'isset', 'empty', 'print_r', 'var_dump');
 
 /**
  * Path to store logs/profiles when using with the logger tool. This is needed for writing log files and using the log viewer tool
@@ -51,7 +51,7 @@ if ($config['APP_MODE'] === 'dev')
  */
 //$config['ERROR_404_DOCUMENT'] = 'error.php';
 $config['ERROR_404_ROUTE'] = '/error';
-
+//$config['sessionCacheType'] = 'apc';
 
 /**
  * Settings for memcache server connections, you don't have to set if using localhost only.
@@ -92,12 +92,12 @@ $config['ERROR_404_ROUTE'] = '/error';
  * To enable autoloading, add directories which consist of the classes needed in your application. 
  *
  * $config['AUTOLOAD'] = array(
-                            //internal directories, live in the app
-                            'class', 'model', 'module/example/controller', 
-                            //external directories, live outside the app
-                            '/var/php/library/classes'
-                        );
-*/
+ *                           //internal directories, live in the app
+ *                           'class', 'model', 'module/example/controller', 
+ *                           //external directories, live outside the app
+ *                           '/var/php/library/classes'
+ *                       );
+ */
 
 /**
  * you can include self defined config, retrieved via Doo::conf()->variable

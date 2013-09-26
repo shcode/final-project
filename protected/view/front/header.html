@@ -1,13 +1,21 @@
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
         <!--=== Top ===-->    
         <div class="top">
             <div class="container">         
                 <ul class="loginbar pull-right"> 
-                    <li>Welcome, Guest</li>  
+                    <li>Selamat Datang, <!-- if {{login}} === 0 -->Tamu<!-- else -->
+                        <a href="/user/profil/<?=$data['session']->user->username;?>"><?=$data['session']->user->name_user;?></a>
+                        <!-- endif --></li>  
                     <li class="devider">&nbsp;</li>
                     <li>Follow Us on &nbsp;
-                        <a class="social" href="#"><i class="icon-facebook"></i></a>&nbsp;
-                        <a class="social" href="#"><i class="icon-twitter"></i></a>&nbsp;
-                        <a class="social" href="#"><i class="icon-rss"></i></a>
+                        <a class="social" href=""><i class="icon-facebook"></i></a>&nbsp;
+                        <a class="social" href=""><i class="icon-twitter"></i></a>&nbsp;
+                        <a class="social" href=""><i class="icon-rss"></i></a>
                     </li>  
                 </ul>
             </div>      
@@ -35,17 +43,17 @@
                             
                             <div class="nav-collapse collapse">
                                 <ul class="nav">
-                                    <li>
+                                    <li class="active">
                                         <a href="#">
-                                            <i class="icon-legal icon-white"></i> Auction</a>
+                                            <i class="icon-legal icon-white"></i> Lelang</a>
                                     </li>
                                     <li>
                                         <a href="#">
-                                            <i class="icon-shopping-cart icon-white"></i> Buy</a>
+                                            <i class="icon-shopping-cart icon-white"></i> Jual</a>
                                     </li>
                                     <li>
                                         <a href="#">
-                                            <i class="icon-home icon-white"></i> Rent</a>
+                                            <i class="icon-home icon-white"></i> Sewa</a>
                                     </li>
                                     <li>
                                         <a href="#">
@@ -53,16 +61,17 @@
                                     </li>
                                     <li>
                                         <a href="#">
-                                            <i class="icon-info-sign icon-white"></i> About</a>
+                                            <i class="icon-info-sign icon-white"></i> Tentang</a>
                                     </li>
                                 </ul>
                                 <ul class="nav pull-right">
                                     <li class="dropdown">
-                                        <a class="dropdown-toggle" href="#" data-dropdown="#dropdown-signin" data-toggle="dropdown"><i class="icon-lock icon-white"></i> Sign In
+                                        <!-- if {{login}} === 0 -->
+                                        <a class="dropdown-toggle" href="#" data-dropdown="#dropdown-signin" data-toggle="dropdown"><i class="icon-lock icon-white"></i> Masuk
                                             <strong class="caret"></strong>
                                         </a>
                                         <div class="dropdown-menu" id="dropdown-signin" style="padding: 15px; padding-bottom: 0px;">
-                                            <form method="post" action="login" accept-charset="UTF-8">
+                                            <form method="post" action="/login" accept-charset="UTF-8">
                                                 <div class="input-prepend">
                                                     <span class="add-on"><i class="icon-user"></i></span>
                                                     <input type="text" placeholder="Username" id="username" name="username">
@@ -71,18 +80,31 @@
                                                     <span class="add-on"><i class="icon-lock"></i></span>
                                                     <input type="password" placeholder="Password" id="password" name="password">
                                                 </div>
-                                                <label class="string optional" for="user_remember_me">
-                                                    <input class="pull-left" style="margin-right: 10px;" type="checkbox" name="remember-me" id="remember-me" value="1">Remember me</label>
-                                                <input class="btn-u hover-effect btn-primary btn-block" type="submit" id="sign-in" value="Sign In">
+                                                <label class="string optional" for="remember">
+                                                    <input class="pull-left" style="margin-right: 10px;" type="checkbox" name="remember" id="remember" value="1">Selalu masuk</label>
+                                                <a class="btn btn-primary" href="{{rootUrl}}register" type="button">Daftar</a>
+                                                <input class="btn-u hover-effect btn-primary pull-right" type="submit" id="sign-in" value="Masuk">
                                                 <label style="text-align:center;margin-top:5px">or</label>
                                                 <a class="btn btn-primary btn-block" type="button" id="sign-in-facebook">
-                                                    <i class="icon-facebook icon-white"></i> Sign In with Facebook</a>
+                                                    <i class="icon-facebook icon-white"></i> Masuk dengan Facebook</a>
                                                 <a class="btn btn-primary btn-block" type="button" id="sign-in-twitter">
-                                                    <i class="icon-twitter icon-white"></i> Sign In with Twitter</a>
+                                                    <i class="icon-twitter icon-white"></i> Masuk dengan Twitter</a>
                                                 <a class="btn btn-primary btn-block" type="button" id="sign-in-google">
-                                                    <i class="icon-google-plus-sign icon-white"></i> Sign In with Google</a>
+                                                    <i class="icon-google-plus-sign icon-white"></i> Masuk dengan Google</a>
                                             </form>
                                         </div>
+                                        <!-- else -->
+                                        <a class="dropdown-toggle" href="#" data-dropdown="#dropdown-signin" data-toggle="dropdown"><i class="icon-lock icon-white"></i> Member Menu
+                                            <strong class="caret"></strong>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/profil">Profil</a></li>
+                                            <li><a href="/listing">Listing</a></li>
+                                            <li><a href="/histori">History</a></li>
+                                            <li><a href="/bid">Bid</a></li>
+                                            <li><a href="/logout">Keluar</a></li>
+                                        </ul>
+                                        <!-- endif -->
                                     </li>
                                 </ul>
                             </div>
@@ -95,4 +117,5 @@
                 <!--/.navbar -->            
             </div><!-- /container -->               
         </div><!--/header -->      
-        <!--=== End Header ===-->
+        <!--=== End Header ===-->        
+

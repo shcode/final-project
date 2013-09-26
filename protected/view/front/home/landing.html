@@ -1,0 +1,23 @@
+        <!--=== Content Part ===-->
+        <div class="container" id="container-konfirmasi">	
+			<div class="headline"><h3>Konfirmasi Akun</h3></div>
+            <!-- if isset($this->flashMessenger[0]) -->
+            <div class="alert alert-<?php echo $this->flashMessenger[0];?>">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <?php echo $this->flashMessenger[1];?><br />
+                Anda akan otomatis dipindah ke halaman depan.
+            </div>
+            <!-- endif -->
+        </div>
+        <script>
+            $(document).ready(function(){
+                $('#container-konfirmasi').css('min-height', $(window).height() - 190);
+                $(window).resize(function(){
+                    $('#container-konfirmasi').css('min-height', $(window).height() - 190); 
+                });
+				
+				setTimeout(function() {
+					window.location.href = "/";
+				}, 5000);
+            })
+        </script> 

@@ -1,0 +1,94 @@
+        <div class="container" style="margin-top:10px">             
+            <div class="row-fluid">
+                <form class="reg-page" id="reg-form" method="post">
+                    <!-- if isset({{error}}) --> 
+                    <div class="alert alert-error">
+                        <button type="button" class="close" data-hide="alert">&times;</button>
+                        <!-- loop error -->
+                            <label class="error">{{error' value}}</label>
+                        <!-- endloop -->
+                    <!-- else -->
+                    <div class="alert alert-error" style="display:none">
+                            <button type="button" class="close" data-hide="alert">&times;</button>
+                    <!-- endif -->
+                    </div>
+                    
+                    <!-- if isset({{info}}) -->
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-hide="alert">&times;</button>
+                        Listing berhasil dimasukkan. 
+                    </div>
+                    <!-- endif -->                                    
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <div class="headline"><h4>Lokasi</h4></div>
+                            <label>Alamat <span class="color-red">*</span></label>
+                            <textarea id="alamat" onblur="mapUpdateAddress()" rows="5" class="span12" style="resize:vertical" name="address"></textarea>
+
+                            <div class="controls">
+                                <div class="span6">
+                                    <label>Propinsi <span class="color-red">*</span></label>
+                                    <select class="span12" onchange="" name="province_id" id="propinsi">
+                                        <option value="">Pilih Propinsi</option>
+                                        <!-- loop propinsi -->
+                                        <option value="{{propinsi' v.@province_id}}">{{propinsi' v.@name}}</option>
+                                        <!-- endloop -->
+                                    </select>
+                                </div>
+                                <div class="span6">
+                                    <label>Kota/Kabupaten <span class="color-red">*</span></label>
+                                    <select readonly="readonly" onchange="" class="span12" name="district_id" id="kota">
+                                        <option value="">Pilih Kota/Kab.</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="controls">                                
+                                <div class="span6">
+                                    <label>Kecamatan <span class="color-red">*</span></label>
+                                    <select readonly="readonly" onchange="mapUpdateAddress()" class="span12" name="subdistrict_id" id="kecamatan">
+                                        <option value="">Pilih Kecamatan</option>
+                                    </select>
+                                </div>
+                                <div class="span6">
+                                    <label>Kode Pos <span class="color-red">*</span></label>
+                                    <input type="text" class="span12" name="zip_code" autocomplete="off">
+                                </div>                                
+                            </div>
+                            <div class="control">
+                                <div id="map-canvas" class="span12" style="height: 200px">
+                                </div>
+                            </div>
+                            <div class="controls"> 
+                                <div class="span6">                            
+                                    <label>Latitude <span class="color-red">*</span></label>
+                                    <input readonly="readonly" type="text" class="span12" id="latitude" name="latitude">
+                                </div>   
+                                <div class="span6">
+                                    <label>Longitude <span class="color-red">*</span></label>
+                                    <input readonly="readonly" type="text" class="span12" id="longitude" name="longitude">
+                                </div>                                                             
+                            </div>   
+                        </div>
+                        <div class="span6">
+                            <div class="headline"><h4>Upload Gambar</h4></div>
+                            <div class="row-fluid gallery">
+                                <ul class="thumbnails thumb-upload">                     
+                                </ul><!--/thumbnails-->
+                            </div>                        
+                            <div class="controls">
+                                <div id="uploader"></div>
+                            </div>
+                            <hr>
+                            <br>
+                            <input type="submit" class="btn-u btn-block" name="submit" value="Submit Listing" />
+                            <p><small class="pull-right">*) harus diisi</small></p>                            
+                        </div>
+                    </div>
+                </form>
+            </div><!--/row-fluid-->
+        </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIXZvdL89TfR5ntBGrZcbyktFJ98V6il8&sensor=false"></script>  
+    <script src="{{rootUrl}}global/js/plugins/jquery.validate.min.js"></script>      
+<script>
+function initialize(){lat=$("#latitude"),lng=$("#longitude"),latlng=new google.maps.LatLng(-7.2929,112.7298);var a={zoom:7,mapTypeId:google.maps.MapTypeId.ROADMAP,center:latlng};map=new google.maps.Map(document.getElementById("map-canvas"),a),marker=new google.maps.Marker({map:map,draggable:!0,animation:google.maps.Animation.DROP}),google.maps.event.addListener(marker,"drag",function(){$ll=marker.getPosition(),lng.val($ll.lng()),lat.val($ll.lat())})}function mapUpdate(){$ll=new google.maps.LatLng(lat.value,lng.value),marker.setPosition($ll),map.setCenter($ll)}function mapUpdateAddress(){var a=$("#propinsi option:selected").text(),b=$("#kota option:selected").text(),c=$("#kecamatan option:selected").text(),d=$("#alamat").val();if("Pilih Propinsi"==a||"Pilih Kota/Kab."==b||"Pilih Kecamatan"==c||""==d)console.log("Empty");else{address=d+", "+c+", "+b+", "+a+", Indonesia";var e=new google.maps.Geocoder;e.geocode({address:address},function(a,b){b==google.maps.GeocoderStatus.OK&&(latlng=a[0].geometry.location,map.setCenter(latlng),map.setZoom(15),marker.setPosition(latlng),lng.val(latlng.lng()),lat.val(latlng.lat()))})}}var marker,map,lng,lat;$(document).ready(function(){initialize(),App.initFancybox(),$("[data-hide]").on("click",function(){$(this).closest("."+$(this).attr("data-hide")).hide()}),$("#uploader").fineUploader({request:{endpoint:"/proses/upload"},text:{uploadButton:'<div class="btn-block"><i class="icon-upload icon-white"></i> Upload File</div>'},template:'<div class="qq-uploader span12"><pre class="qq-upload-drop-area span12"><span>{dragZoneText}</span></pre><div class="controls"><div class="qq-upload-button btn btn-success span12">{uploadButtonText}</div></div><span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span><ul class="qq-upload-list" style="margin: 30px 10px 10px 10px; text-align: center;"></ul></div>',classes:{success:"alert alert-success",fail:"alert alert-error"}}).on("complete",function(a,b,c,d){var f=($(this).fineUploader("getUuid",b),$(this).fineUploader("getItemByFileId",b)),g=$("<a>Close</a>");if(d.success){g.addClass("btn btn-small"),g.attr("data-dismiss","alert"),$(f).find(".qq-upload-status-text").before(g);var h='<li class="span3"><a class="thumbnail fancybox-button zoomer" data-rel="upload-image" title="Gambar #'+(b+1)+'" href="{{rootUrl}}global/img/upload/'+d.uploadName+'">'+'<div class="overlay-zoom">'+'<img src="{{rootUrl}}global/img/upload/resize/'+d.nameRaw+'_120x76.jpg" alt="">'+'<div class="zoom-icon"></div>'+"</div>"+"</a>"+'<input name="image[]" type="hidden" value="'+d.uploadName+'" />'+"</li>";$(".thumbnails").append(h)}}),$("#reg-form").validate({rules:{address:"required",province_id:"required",district_id:"required",subdistrict_id:"required",zip_code:{required:!0,min:0},longitude:{required:!0},latitude:{required:!0}},messages:{address:"- Alamat belum diisi.",province_id:"- Propinsi belum diisi.",district_id:"- Kota belum diisi.",subdistrict_id:"- Kecamatan belum diisi.",zip_code:{required:"- Kode Pos belum diisi.",min:"- Kode Pos harus berupa angka."},longitude:{required:"- Longitude belum diisi."},latitude:{required:"- Latitude belum diisi."}},errorLabelContainer:$(".alert"),onkeyup:!1,submitHandler:function(a){a.submit()}}),$("#propinsi").change(function(){$.getJSON("/proses/getkota",{id:$(this).val()},function(a){for(var b="<option value=''>Pilih Kota/Kab</option>",c=0;c<a.length;c++)b+="<option value='"+a[c].district_id+"'>"+a[c].name+"</option>";$("#kota").html(b).removeAttr("readonly"),$("#kecamatan").html("<option value=''>Pilih Kecamatan</option>").attr("readonly","readonly"),mapUpdateAddress()})}),$("#kota").change(function(){$.getJSON("/proses/getkecamatan",{id:$("#propinsi").val(),idkota:$(this).val()},function(a){for(var b="<option value=''>Pilih Kecamatan</option>",c=0;c<a.length;c++)b+="<option value='"+a[c].subdistrict_id+"'>"+a[c].name+"</option>";$("#kecamatan").html(b).removeAttr("readonly"),mapUpdateAddress()})})});
+</script>

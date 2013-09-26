@@ -1,0 +1,51 @@
+        <!--=== Content Part ===-->
+        <div class="container">	
+            <!-- if isset($this->flashMessenger[0]) -->
+            <div class="alert alert-<?php echo $this->flashMessenger[0];?>">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <?php echo $this->flashMessenger[1];?>
+            </div>
+            <!-- endif -->
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="affix-sidebar" data-spy="affix" data-offset-top="66">                    
+                        <div class="headline"><h3>Menu Listing</h3></div>
+                        <ul class="unstyled who margin-bottom-20">
+                            <li><a href="/listing/tambah"><i class="icon-plus"></i>Buat Listing Baru</a></li>
+                        </ul>       
+                        <div class="headline"><h3>Pencarian</h3></div>
+                        <form>
+                            <select name="field" class="span12">
+                                <option value="title">Judul Listing</option>
+                                <option value="description">Deskripsi</option>
+                            </select>
+                            <input type="text" class="span12" name="key" placeholder="Kata Kunci" />
+                        </form>
+                    </div>
+                </div>
+                <div class="span9">
+                    <div class="headline"><h3>Daftar Properti Anda</h3></div>
+                    {{pager}}
+                    <div class="row-fluid">
+                        <!-- loop listing -->
+                        <div class="booking-blocks">
+                            <div class="pull-left booking-img">
+                                <img alt="" src="{{rootUrl}}global/img/upload/resize/{{getName(listing' value.@Image[0].@name)}}_120x76.jpg">
+                                <ul class="unstyled">
+                                    <li><i class="icon-briefcase"></i></li>
+                                    <li><i class="icon-map-marker"></i> {{listing' value.@Area.@name}}, {{getKota(listing' value.@Area.@province_id, listing' value.@Area.@district_id)}}, {{getPropinsi(listing' value.@Area.@province_id)}}</li>
+                                </ul>
+                            </div>
+                            <div style="overflow:hidden;">
+                                <h2><a href="#">{{listing' value.@title}}</a></h2>
+
+                                <p>{{shorten(listing' value.@description)}}</p>
+                            </div>
+                        </div>
+                        <!-- endloop -->
+                    </div>
+                    {{pager}}
+                </div>
+            </div>
+
+        </div>

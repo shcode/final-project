@@ -19,8 +19,6 @@ Thumbs.db
 .tmproj
 *.esproj
 nbproject
-*.sublime-project
-*.sublime-workspace
 
 # Dreamweaver added files
 _notes
@@ -39,3 +37,4 @@ publish
 .idea
 /db.profile.xml
 /protected/cache/
+/protected/viewc/

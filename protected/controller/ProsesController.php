@@ -1,29 +1,95 @@
 <?php
 
-class ProsesController extends DooController {
+Doo::loadController("BaseController");
+
+class ProsesController extends BaseController {
 
 	function get_image() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+		
 	}
 
-	function del_image() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+	function upload_image() {
+
+		Doo::loadHelper("DooGdImage");		
+		$gd = new DooGdImage("global/img/upload/", "global/img/upload/resize/");
+
+		$response = array();
+
+		if($gd->checkImageExtension('qqfile')){
+			$name = 'img_' .date('Ymdhis');
+
+			$uploadImg = $gd->uploadImage('qqfile', $name);
+
+			$gd->generatedQuality = 85;
+			$gd->generatedType="jpg";
+
+			$gd->thumbSuffix = '_670x423';
+			$gd->ratioResize($uploadImg,670,423);
+
+			$gd->thumbSuffix = '_120x76';
+			$gd->adaptiveResize($uploadImg,120,76);			
+
+			$response = array("success" => true, "uploadName" => $uploadImg, "nameRaw" => $name);
+		}
+		else
+		{
+			$response = array("error" => "File has an invalid extension, it should be one of 'jpg, jpeg, gif, png'");
+		}
+		
+		echo json_encode($response);
 	}
 
-	function cek_user() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+	function delete_image()
+	{
+		$id = $this->params['id'];
+		unset($_SESSION["image"][$id]);
+
+		echo json_encode(array("success" => true));
 	}
 
-	function cek_email() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+	public function cek_user() {
+		Doo::loadModel("User");
+
+		$user = new User();
+		$user->username = $_GET['username'];
+
+		echo $user->find() ? 'false' : 'true';
+	}
+
+	public function cek_email() {
+		Doo::loadModel("User");
+
+		$user = new User();
+		$user->email = $_GET['email'];
+
+		echo $user->find() ? 'false' : 'true';
 	}
 
 	function get_propinsi() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+		Doo::loadModel("Area");
+
+		$area = new Area();
+		$data = $area->getByLevel('1');
+
+		$this->toJSON($data);
 	}
 
 	function get_kota() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+		Doo::loadModel("Area");
+
+		$area = new Area();
+		$data = $area->getByLevel_ProvinceId('2', $_GET['id']);
+
+		$this->toJSON($data);
+	}
+
+	function get_kecamatan() {
+		Doo::loadModel("Area");
+
+		$area = new Area();
+		$data = $area->getByLevel_ProvinceId_DistrictId(3, $_GET['id'], $_GET['idkota']);
+
+		echo json_encode($data);
 	}
 
 }

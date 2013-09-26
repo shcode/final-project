@@ -21,7 +21,13 @@
         
         <!--=== Content Part ===-->
         <div class="container">	
-        
+            <!-- if isset($this->flashMessenger[0]) -->
+            <div class="alert alert-<?php echo $this->flashMessenger[0];?>">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <?php echo $this->flashMessenger[1];?>
+            </div>
+            <!-- endif -->
+
             <!-- Popular Listing -->
             <div class="headline"><h3>Popular Listing</h3></div>
             <ul class="thumbnails">

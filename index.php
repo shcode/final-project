@@ -3,7 +3,7 @@ setlocale(LC_ALL, 'id_ID.UTF8', 'id_ID.UTF-8', 'id_ID.8859-1', 'id_ID', 'IND.UTF
 include './protected/config/common.conf.php';
 include './protected/config/routes.conf.php';
 include './protected/config/db.conf.php';
-//include './protected/config/acl.conf.php';
+include './protected/config/acl.conf.php';
 
 #Just include this for production mode
 //include $config['BASE_PATH'].'deployment/deploy.php';
@@ -12,8 +12,8 @@ include $config['BASE_PATH'].'app/DooConfig.php';
 
 # Uncomment for auto loading the framework classes.
 //spl_autoload_register('Doo::autoload');
-//Doo::acl()->rules = $acl;
-//Doo::acl()->defaultFailedRoute = '/403';
+Doo::acl()->rules = $acl;
+Doo::acl()->defaultFailedRoute = '/403';
 Doo::conf()->set($config);
 
 # remove this if you wish to see the normal PHP error view.

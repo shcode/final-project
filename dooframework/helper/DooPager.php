@@ -73,19 +73,19 @@ class DooPager{
      * CSS class name for inactive links
      * @var string
      */
-    public $inactivePrevCss = 'inactivePrev';
+    public $inactivePrevCss = 'disabled';
 
     /**
      * CSS class name for inactive links
      * @var string
      */
-    public $inactiveNextCss = 'inactiveNext';
+    public $inactiveNextCss = 'disabled';
 
     /**
      * CSS class name for selected current link
      * @var string
      */
-    public $currentCss = 'current';
+    public $currentCss = 'active';
 
     /**
      * CSS class name for next link
@@ -291,10 +291,12 @@ a:hover .paginate{
         $prev_page = $this->currentPage-1;
         $next_page = $this->currentPage+1;
 
+        $this->output = '<div class="pagination"><ul>';
+
         if($this->_noNextPrev)
-            $this->components['prev_link'] = ($this->currentPage != 1 && $this->totalItem >= $this->maxLength) ? "<a class=\"{$this->prevCss}\" href=\"{$this->baseUrl}/{$prev_page}\">{$this->prevText}</a> ":"<span class=\"{$this->inactivePrevCss}\">{$this->prevText}</span> ";
+            $this->components['prev_link'] = ($this->currentPage != 1 && $this->totalItem >= $this->maxLength) ? "<li><a href=\"{$this->baseUrl}/{$prev_page}\">{$this->prevText}</a></li>":"<li class=\"{$this->inactivePrevCss}\"><a>{$this->prevText}</a></li> ";
         else
-            $this->output = ($this->currentPage != 1 && $this->totalItem >= $this->maxLength) ? "<a class=\"{$this->prevCss}\" href=\"{$this->baseUrl}/{$prev_page}\">{$this->prevText}</a> ":"<span class=\"{$this->inactivePrevCss}\">{$this->prevText}</span> ";
+            $this->output .= ($this->currentPage != 1 && $this->totalItem >= $this->maxLength) ? "<li><a href=\"{$this->baseUrl}/{$prev_page}\">{$this->prevText}</a></li> ":"<li class=\"{$this->inactivePrevCss}\"><a>{$this->prevText}</a></li> ";
 
         if($this->totalPage > $this->maxLength){
             $midRange = $this->maxLength-2;
@@ -342,30 +344,32 @@ a:hover .paginate{
                         if($i==$this->totalPage && $this->currentPage<=($this->totalPage-($this->maxLength-$center)))
                             $lastDot = '...';
                     }
-                    $this->output .= ($i == $this->currentPage) ? "<a class =\"{$this->currentCss}\" href=\"javascript:void(0);\">$i":"<a class=\"{$this->pagesCss}\"  href=\"{$this->baseUrl}/$i\">$lastDot $i";
+                    $this->output .= ($i == $this->currentPage) ? "<li class =\"{$this->currentCss}\"><a href=\"javascript:void(0);\">$i":"<li><a href=\"{$this->baseUrl}/$i\">$lastDot $i";
 
                     if($range[0] > 2 && $i == 1)
-                        $this->output .= " ...</a> ";
+                        $this->output .= " ...</a></li> ";
                     else
-                        $this->output .= '</a> ';
+                        $this->output .= '</a></li> ';
                 }
             }
 
             if($this->_noNextPrev)
-                $this->components['next_link'] = ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<a class=\"{$this->nextCss}\" href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a>\n" : "<span class=\"{$this->inactiveNextCss}\">{$this->nextText}</span>\n";
+                $this->components['next_link'] = ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<li><a href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a></li>\n" : "<li class=\"{$this->inactiveNextCss}\"><a>{$this->nextText}</a></li>\n";
             else
-                $this->output .= ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<a class=\"{$this->nextCss}\" href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a>\n" : "<span class=\"{$this->inactiveNextCss}\">{$this->nextText}</span>\n";
+                $this->output .= ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<li><a href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a></li>\n" : "<li class=\"{$this->inactiveNextCss}\"><a>{$this->nextText}</a></li>\n";
         }
         else{
             for($i=1;$i<=$this->totalPage;$i++){
-                $this->output .= ($i == $this->currentPage) ? "<a class=\"{$this->currentCss}\" href=\"javascript:void(0);\">$i</a> ":"<a class=\"{$this->pagesCss}\" href=\"{$this->baseUrl}/$i\">$i</a> ";
+                $this->output .= ($i == $this->currentPage) ? "<li class=\"{$this->currentCss}\"><a href=\"javascript:void(0);\">$i</a></li> ":"<li><a href=\"{$this->baseUrl}/$i\">$i</a></li> ";
             }
 
             if($this->_noNextPrev)
-                $this->components['next_link'] = ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<a class=\"{$this->nextCss}\" href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a>\n" : "<span class=\"{$this->inactiveNextCss}\">{$this->nextText}</span>\n";
+                $this->components['next_link'] = ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<li><a href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a></li>\n" : "<li class=\"{$this->inactiveNextCss}\"><>{$this->nextText}</a></li>\n";
             else
-                $this->output .= ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<a class=\"{$this->nextCss}\" href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a>\n" : "<span class=\"{$this->inactiveNextCss}\">{$this->nextText}</span>\n";
+                $this->output .= ($this->currentPage != $this->totalPage && $this->totalItem >= $this->maxLength) ? "<li><a href=\"{$this->baseUrl}/$next_page\">{$this->nextText}</a></li>\n" : "<li class=\"{$this->inactiveNextCss}\"><a>{$this->nextText}</a></li>\n";
         }
+
+        $this->output .= "</ul></div>";
 
         $this->low = ($this->currentPage-1) * $this->itemPerPage;
         $this->high = ($this->currentPage * $this->itemPerPage)-1;

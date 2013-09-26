@@ -69,7 +69,7 @@ class DooModel{
      * Determine whether the DB field names should be case sensitive.
      * @var bool
      */
-    protected static $caseSensitive = false;
+    protected static $caseSensitive = true;
 
     /**
      * The class name of the Model
@@ -624,6 +624,7 @@ class DooModel{
             $obj = new $clsname;
 
             if(is_string($field)){
+                $field = $this->_get_field($field);
                 $obj->{$field} = $args[0];
 
                 //if more than the field total, it must be an option array
@@ -636,11 +637,13 @@ class DooModel{
                 if(isset($first)){
                     return $this->db()->find($obj, $first);
                 }
+
                 return $this->db()->find($obj);
             }
             else{
                 $i=0;
                 foreach($field as $f){
+                    $f = $this->_get_field($f);
                     $obj->{$f} = $args[$i++];
                 }
 
@@ -730,6 +733,7 @@ class DooModel{
             $obj = new $clsname;
 
             if(is_string($field)){
+                $field = $this->_get_field($field);
                 $obj->{$field} = $args[0];
 
                 //if more than the field total, it must be an option array
@@ -747,6 +751,7 @@ class DooModel{
             else{
                 $i=0;
                 foreach($field as $f){
+                    $f = $this->_get_field($f);
                     $obj->{$f} = $args[$i++];
                 }
 
@@ -813,6 +818,24 @@ class DooModel{
             $obj->{$k} = $v;
         }
         return $obj;
+    }
+
+    private static function _get_field($str)
+    {
+        preg_match_all('/[A-Z]/', $str, $matches, PREG_OFFSET_CAPTURE);
+
+        $found = 0;
+        for ($j = 0; $j < count($matches[0]); $j++)
+        {
+            $m = $matches[0];
+            if($m[$j][1]!==0)
+            {
+                $str = substr_replace($str, "_" . $m[$j][0], $m[$j][1] + $found, 1);
+                $found++;
+            }
+        }
+
+        return strtolower($str);
     }
 
 }

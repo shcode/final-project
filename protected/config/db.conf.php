@@ -1,42 +1,55 @@
 <?php
 
 //Properti
-$dbmap['Listing']['has_one']['ListingDetail'] = array('foreign_key'=>'id_properti');
-$dbmap['Listing']['has_many']['Image'] = array('foreign_key'=>'id_properti');
-$dbmap['Properti']['belongs_to']['TipeProperti'] = array('foreign_key'=>'id_ptipe');
-$dbmap['Properti']['belongs_to']['User'] = array('foreign_key'=>'id_user');
+$dbmap['Listing']['has_one']['ListingDetail'] = array('foreign_key'=>'listing_id');
+$dbmap['Listing']['has_many']['Image'] = array('foreign_key'=>'listing_id');
+$dbmap['Listing']['has_many']['Bid'] = array('foreign_key'=>'listing_id');
+$dbmap['Listing']['has_many']['Favorite'] = array('foreign_key'=>'listing_id');
+$dbmap['Listing']['belongs_to']['Type'] = array('foreign_key'=>'type_id');
+$dbmap['Listing']['belongs_to']['User'] = array('foreign_key'=>'user_id');
+$dbmap['Listing']['belongs_to']['Area'] = array('foreign_key'=>'area_id');
 
 //TipeProperti
-$dbmap['TipeProperti']['has_many']['Properti'] = array('foreign_key'=>'id_ptipe');
+$dbmap['Type']['has_many']['Listing'] = array('foreign_key'=>'type_id');
 
-//Transaksi
-$dbmap['Transaksi']['has_many']['DetilTransaksi'] = array('foreign_key'=>'id_transaksi');
-$dbmap['Transaksi']['has_many']['Report'] = array('foreign_key'=>'id_transaksi');
-$dbmap['Transaksi']['belongs_to']['Properti'] = array('foreign_key'=>'id_properti');
-$dbmap['Transaksi']['belongs_to']['TipeTransaksi'] = array('foreign_key'=>'id_ttipe');
-
-//TipeTransaksi
-$dbmap['TipeTransaksi']['has_many']['Transaksi'] = array('foreign_key'=>'id_ttipe');
+//ListingDetail
+$dbmap['ListingDetail']['belongs_to']['Listing'] = array('foreign_key'=>'listing_id');
 
 //User
-$dbmap['User']['has_many']['DetilTransaksi'] = array('foreign_key'=>'id_user');
-$dbmap['User']['has_many']['Properti'] = array('foreign_key'=>'id_user');
-$dbmap['User']['has_many']['Report'] = array('foreign_key'=>'id_user');
-$dbmap['User']['has_many']['Rating'] = array('foreign_key'=>'id_user', 'through'=>'user_rating' );
-
-//DetilTransaksi
-$dbmap['DetilTransaksi']['belongs_to']['Transaksi'] = array('foreign_key' => 'id_transaksi');
-$dbmap['DetilTransaksi']['belongs_to']['User'] = array('foreign_key' => 'id_user');
+$dbmap['User']['has_many']['Listing'] = array('foreign_key'=>'user_id');
+$dbmap['User']['has_many']['Reputation'] = array('foreign_key'=>'user_id');
+$dbmap['User']['has_many']['Favorite'] = array('foreign_key'=>'user_id');
+$dbmap['User']['has_many']['Log'] = array('foreign_key'=>'user_id');
+$dbmap['User']['has_many']['Bid'] = array('foreign_key'=>'user_id');
+$dbmap['User']['belongs_to']['Area'] = array('foreign_key'=>'area_id');
 
 //Image
-$dbmap['Image']['belongs_to']['Properti'] = array('foreign_key' => 'id_properti');
+$dbmap['Image']['belongs_to']['Listing'] = array('foreign_key' => 'listing_id');
 
-//Report
-$dbmap['Report']['belongs_to']['Transaksi'] = array('foreign_key' => 'id_transaksi');
-$dbmap['Report']['belongs_to']['User'] = array('foreign_key' => 'id_user');
+//Reputation
+$dbmap['Reputation']['belongs_to']['User'] = array('foreign_key' => 'user_id');
 
-//Rating
-$dbmap['Rating']['has_one']['User'] = array('foreign_key' => 'id_urate', 'through'=>'user_rating');
+//Favorite
+$dbmap['Favorite']['belongs_to']['User'] = array('foreign_key' => 'user_id');
+$dbmap['Favorite']['belongs_to']['Listing'] = array('foreign_key' => 'listing_id');
+
+//Bid
+$dbmap['Bid']['belongs_to']['User'] = array('foreign_key' => 'user_id');
+$dbmap['Bid']['belongs_to']['Listing'] = array('foreign_key' => 'listing_id');
+
+//Log
+$dbmap['Log']['belongs_to']['User'] = array('foreign_key' => 'user_id');
+
+//Area
+$dbmap['Area']['has_many']['User'] = array('foreign_key' => 'area_id');
+$dbmap['Area']['has_many']['Listing'] = array('foreign_key' => 'area_id');
+
+//Message
+
+
+//Feedback
+
+
 
 //$dbconfig[ Environment or connection name] = array(Host, Database, User, Password, DB Driver, Make Persistent Connection?);
 /**
@@ -45,5 +58,5 @@ $dbmap['Rating']['has_one']['User'] = array('foreign_key' => 'id_urate', 'throug
  * array('localhost', 'database', 'root', '1234', 'mysql', true, 'collate'=>'utf8_unicode_ci', 'charset'=>'utf8'); 
  */
 $dbconfig['dev'] = array('localhost', 'ta_doo', 'root', '', 'mysql', true);
-$dbconfig['prod'] = array('localhost', 'ta_doo', 'root', '', 'mysql', true);
+$dbconfig['prod'] = array('localhost', 'ta_doo_prod', 'root', '', 'mysql', true);
 ?>
