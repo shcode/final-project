@@ -9,7 +9,7 @@ class ImageBase extends DooModel{
     public $id_image;
 
     /**
-     * @var varchar Max length is 20.
+     * @var varchar Max length is 50.
      */
     public $name;
 
@@ -52,7 +52,7 @@ class ImageBase extends DooModel{
                 ),
 
                 'name' => array(
-                        array( 'maxlength', 20 ),
+                        array( 'maxlength', 50 ),
                         array( 'notnull' ),
                 ),
 

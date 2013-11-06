@@ -16,7 +16,7 @@ class ProsesController extends BaseController {
 		$response = array();
 
 		if($gd->checkImageExtension('qqfile')){
-			$name = 'img_' .date('Ymdhis');
+			$name = 'img_' . date('Ymdhis');
 
 			$uploadImg = $gd->uploadImage('qqfile', $name);
 
@@ -24,7 +24,7 @@ class ProsesController extends BaseController {
 			$gd->generatedType="jpg";
 
 			$gd->thumbSuffix = '_670x423';
-			$gd->ratioResize($uploadImg,670,423);
+			$gd->adaptiveResize($uploadImg,670,423);
 
 			$gd->thumbSuffix = '_120x76';
 			$gd->adaptiveResize($uploadImg,120,76);			
@@ -71,7 +71,7 @@ class ProsesController extends BaseController {
 		$area = new Area();
 		$data = $area->getByLevel('1');
 
-		$this->toJSON($data);
+		echo json_encode($data);
 	}
 
 	function get_kota() {
@@ -80,7 +80,7 @@ class ProsesController extends BaseController {
 		$area = new Area();
 		$data = $area->getByLevel_ProvinceId('2', $_GET['id']);
 
-		$this->toJSON($data);
+		echo json_encode($data);		
 	}
 
 	function get_kecamatan() {

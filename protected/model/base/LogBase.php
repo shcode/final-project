@@ -23,9 +23,14 @@ class LogBase extends DooModel{
      */
     public $created_at;
 
+    /**
+     * @var varchar Max length is 50.
+     */
+    public $log_info;
+
     public $_table = 'log';
     public $_primarykey = 'logs_id';
-    public $_fields = array('logs_id','user_id','logs','created_at');
+    public $_fields = array('logs_id','user_id','logs','created_at','log_info');
 
     public function getVRules() {
         return array(
@@ -50,6 +55,11 @@ class LogBase extends DooModel{
                 'created_at' => array(
                         array( 'datetime' ),
                         array( 'notnull' ),
+                ),
+
+                'log_info' => array(
+                        array( 'maxlength', 50 ),
+                        array( 'optional' ),
                 )
             );
     }

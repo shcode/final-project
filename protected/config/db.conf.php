@@ -1,7 +1,6 @@
 <?php
 
 //Properti
-$dbmap['Listing']['has_one']['ListingDetail'] = array('foreign_key'=>'listing_id');
 $dbmap['Listing']['has_many']['Image'] = array('foreign_key'=>'listing_id');
 $dbmap['Listing']['has_many']['Bid'] = array('foreign_key'=>'listing_id');
 $dbmap['Listing']['has_many']['Favorite'] = array('foreign_key'=>'listing_id');

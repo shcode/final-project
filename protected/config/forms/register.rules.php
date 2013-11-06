@@ -3,12 +3,12 @@
 return array(
     "username" => array(
         array("required", "- Username belum diisi."),
-        array("dbExists", "- Username sudah pernah dipakai.")
+        array("dbNotExist", 'user', 'username', "- Username sudah pernah dipakai.")
     ),
     "email" => array(
         array("required", "- Email belum diisi."),
         array("email", "- Format email salah."),
-        array("dbExist", "- Email sudah pernah dipakai.")
+        array("dbNotExist", 'user', 'email',"- Email sudah pernah dipakai.")
     ),
     "user_address" => array("required", "- Alamat belum diisi."),
     "province_id" => array("required", "- Propinsi belum diisi."),

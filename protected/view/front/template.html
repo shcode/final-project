@@ -80,6 +80,8 @@
         <script src="{{rootUrl}}global/js/plugins/fancybox/jquery.fancybox.pack.js"></script>
         <!-- endif -->
 
+        <script src="{{rootUrl}}global/js/plugins/countdown/jquery.countdown.min.js"></script>
+
         <script src="{{rootUrl}}global/js/main.js"></script>
         <script src="{{rootUrl}}global/js/app.js"></script>
         <script src="{{rootUrl}}global/js/index.js"></script>
@@ -88,7 +90,12 @@
             jQuery(document).ready(function() {
                 App.init();
                 App.initSliders();
-                Index.initParallaxSlider();
+                //Index.initParallaxSlider();
+
+                $('#container-min').css('min-height', $(window).height() - 190);
+                $(window).resize(function(){
+                    $('#container-min').css('min-height', $(window).height() - 190); 
+                });                
             });
         </script>
 

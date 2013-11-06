@@ -1,5 +1,5 @@
         <!--=== Content Part ===-->
-        <div class="container" id="container-konfirmasi">	
+        <div class="container" id="container-min">	
 			<div class="headline"><h3>Konfirmasi Akun</h3></div>
             <!-- if isset($this->flashMessenger[0]) -->
             <div class="alert alert-<?php echo $this->flashMessenger[0];?>">
@@ -11,11 +11,6 @@
         </div>
         <script>
             $(document).ready(function(){
-                $('#container-konfirmasi').css('min-height', $(window).height() - 190);
-                $(window).resize(function(){
-                    $('#container-konfirmasi').css('min-height', $(window).height() - 190); 
-                });
-				
 				setTimeout(function() {
 					window.location.href = "/";
 				}, 5000);

@@ -1,0 +1,44 @@
+        <!--=== Content Part ===-->
+        <div class="container" id="container-min">	
+            <!-- if isset($this->flashMessenger[0]) -->
+            <div class="alert alert-<?php echo $this->flashMessenger[0];?>">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <?php echo $this->flashMessenger[1];?>
+            </div>
+            <!-- endif -->
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="affix-sidebar" data-spy="affix" data-offset-top="66">                    
+                        <div class="headline"><h3>Menu Listing</h3></div>
+                        <ul class="unstyled who margin-bottom-20">
+                            <li><a href="/listing/tambah"><i class="icon-plus"></i>Buat Listing Baru</a></li>
+                        </ul>       
+                        <div class="headline"><h3>Pencarian</h3></div>
+                        <form>
+                            <select name="field" class="span12">
+                                <option value="title">Judul Listing</option>
+                                <option value="description">Deskripsi</option>
+                            </select>
+                            <input type="text" class="span12" name="key" placeholder="Kata Kunci" />
+                        </form>
+                    </div>
+                </div>
+                <div class="span9">
+                    <div class="headline"><h3>Daftar Bid</h3></div>
+                    <!-- if isset({{listing}}) -->
+                    {{pager}}
+                    <div class="row-fluid">
+                        <!-- loop listing -->
+                        
+                        <!-- endloop -->
+                    </div>
+                    {{pager}}
+                    <!-- else -->
+                    <div class="row-fluid">
+                        <p>Belum ada listing yang anda upload.</p>
+                    </div>
+                    <!-- endif -->
+                </div>
+            </div>
+
+        </div>

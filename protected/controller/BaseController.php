@@ -3,6 +3,7 @@
 Doo::loadCore("auth/DooAuth");
 Doo::loadHelper("DooFlashMessenger");
 Doo::loadModel("User");
+Doo::loadModel("Log");
 
 class BaseController extends DooController {
 
@@ -41,7 +42,7 @@ class BaseController extends DooController {
         //if not login, redirect to login page!
         if ($this->auth->isValid() === false)
         {
-            $this->auth->setSecurityLevel(DooAuth::LEVEL_HIGH); // Safety first!
+            $this->auth->setSecurityLevel(DooAuth::LEVEL_LOW); // Safety first!
             $this->auth->setData('unknown', 'anonymous'); // Just a visitor!
             $this->data['login'] = 0;
         }
@@ -58,17 +59,24 @@ class BaseController extends DooController {
         $this->data['session'] = $this->session;
 
         //check against the ACL rules
-//        if ($rs = $this->acl()->process($group, $resource, $action))
-//        {
-//            //echo $role .' is not allowed for '. $resource . ' '. $action;
-//            return $rs;
-//        }
+       if ($rs = $this->acl()->process($group, $resource, $action))
+       {
+           //echo $role .' is not allowed for '. $resource . ' '. $action;
+           return $rs;
+       }
     }
 
     public function addMessage($str)
     {
         $this->flash->addMessage($str);
         DooController::view()->flashMessenger = $this->flash->getMessages();
+    }
+
+    public function printr($str)
+    {
+        echo "<pre>";
+        print_r($str);
+        echo "</pre>";
     }
 
 }

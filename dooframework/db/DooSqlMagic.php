@@ -60,7 +60,7 @@ class DooSqlMagic {
     protected $dbconfig;
     protected $dbconfig_list;
     protected $pdo;
-	protected $attemptAutoReconnect = false;
+  protected $attemptAutoReconnect = false;
 
     protected $transactionLevel = 0;
 
@@ -199,20 +199,20 @@ class DooSqlMagic {
         }
     }
 
-	public function attemptAutoReconnect($status = true) {
-		$this->attemptAutoReconnect = $status;
-	}
+  public function attemptAutoReconnect($status = true) {
+    $this->attemptAutoReconnect = $status;
+  }
 
-	/**
-	 * Attempts to update the wait_timeout variable determining how long to connection should remain open.
-	 * Useful when you want to keep connections timeouts low by default but need a long running task to keep
-	 * the connection open for an extended period of time
-	 * Note: currently only supports MySQL but can add other options if users provide appropriate sql statements
-	 * @param int $timeout The time the connection should remain open in Seconds
-	 */
-	public function setConnectionTimeout($timeout=60) {
-		$this->query("SET SESSION wait_timeout = ?", array($timeout));
-	}
+  /**
+   * Attempts to update the wait_timeout variable determining how long to connection should remain open.
+   * Useful when you want to keep connections timeouts low by default but need a long running task to keep
+   * the connection open for an extended period of time
+   * Note: currently only supports MySQL but can add other options if users provide appropriate sql statements
+   * @param int $timeout The time the connection should remain open in Seconds
+   */
+  public function setConnectionTimeout($timeout=60) {
+    $this->query("SET SESSION wait_timeout = ?", array($timeout));
+  }
 
     /**
      * Close a database connection
@@ -278,11 +278,11 @@ class DooSqlMagic {
                     $q = $querytrack[0];
                     foreach($querytrack as $k=>$v){
                         if($k===0)continue;
-						if (isset($param[$k-1])) {
-							$q .=  "'".$param[$k-1]."'" . $querytrack[$k];
-						} else {
-							throw new Exception('Insufficent paramters provided for query');
-						}
+            if (isset($param[$k-1])) {
+              $q .=  "'".$param[$k-1]."'" . $querytrack[$k];
+            } else {
+              throw new Exception('Insufficent paramters provided for query');
+            }
                     }
                     $querytrack = $q;
                 }else{
@@ -292,45 +292,45 @@ class DooSqlMagic {
                 }
             }
             $this->sql_list[] = $querytrack;
-			//echo '<pre>' . print_r($querytrack, true) . '</pre>';
+      //echo '<pre>' . print_r($querytrack, true) . '</pre>';
         }
 
         $stmt = $this->pdo->prepare($query);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-		// If using auto reconnect then we attempt one connection in a try catch block and see if it works
-		// if it does work just return the result. Otherwise try a reconnect if possible and try re-executing using the non
-		// reconnecting code
-		if ($this->attemptAutoReconnect) {
-			try {
-				if($param==null)
-					$stmt->execute();
-				else {
+    // If using auto reconnect then we attempt one connection in a try catch block and see if it works
+    // if it does work just return the result. Otherwise try a reconnect if possible and try re-executing using the non
+    // reconnecting code
+    if ($this->attemptAutoReconnect) {
+      try {
+        if($param==null)
+          $stmt->execute();
+        else {
           $this->bindArrayValue($stmt, $param);
-					$stmt->execute();
+          $stmt->execute();
         }
-				return $stmt;
-			} catch (PDOException $pdoEx) {
+        return $stmt;
+      } catch (PDOException $pdoEx) {
 
-				// TODO: This test wants improving to cover other SQL DBs
-				if (strpos($pdoEx->getMessage(), 'MySQL server has gone away') !== false) {
-					$this->reconnect();
-					$stmt = $this->pdo->prepare($query);
-					$stmt->setFetchMode(PDO::FETCH_ASSOC);
-				} else {
-					throw $pdoEx;
-				}
-			}
-		}
-
-		if($param==null)
-			$stmt->execute();
-	  else {
-      $this->bindArrayValue($stmt, $param);
-			$stmt->execute();
+        // TODO: This test wants improving to cover other SQL DBs
+        if (strpos($pdoEx->getMessage(), 'MySQL server has gone away') !== false) {
+          $this->reconnect();
+          $stmt = $this->pdo->prepare($query);
+          $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        } else {
+          throw $pdoEx;
+        }
+      }
     }
 
-		return $stmt;
+    if($param==null)
+      $stmt->execute();
+    else {
+      $this->bindArrayValue($stmt, $param);
+      $stmt->execute();
+    }
+
+    return $stmt;
     }
 
     /*
@@ -368,27 +368,27 @@ class DooSqlMagic {
     * @param string $query SQL query prepared statement
     * @param array $param Values used in the prepared SQL
     * @param int $fetchMode  PDO Fetch mode for the statement
-	* @param mixed $fetchModeOptionalParam1 First Optional Param for PDOStatement::setFetchMode
+  * @param mixed $fetchModeOptionalParam1 First Optional Param for PDOStatement::setFetchMode
     * @param mixed $fetchModeOptionalParam2 Second Optional Param for PDOStatement::setFetchMode
     * @return Returns an array a row from the result set
     */
     public function fetchRow($query, $param = null, $fetchMode = null, $fetchModeOptionalParam1=null, $fetchModeOptionalParam2=array()) {
         $stmt = $this->query($query, $param);
-		if($fetchMode!==null) {
-			switch($fetchMode) {
-				case PDO::FETCH_COLUMN:
-					$stmt->setFetchMode($fetchMode, ($fetchModeOptionalParam1 !== null) ? $fetchModeOptionalParam1 : 0);
-					break;
-				case PDO::FETCH_CLASS:
-					$stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1, $fetchModeOptionalParam2);
-					break;
-				case PDO::FETCH_INTO:
-					$stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1);
-					break;
-				default:
-					$stmt->setFetchMode($fetchMode);
-			}
-		}
+    if($fetchMode!==null) {
+      switch($fetchMode) {
+        case PDO::FETCH_COLUMN:
+          $stmt->setFetchMode($fetchMode, ($fetchModeOptionalParam1 !== null) ? $fetchModeOptionalParam1 : 0);
+          break;
+        case PDO::FETCH_CLASS:
+          $stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1, $fetchModeOptionalParam2);
+          break;
+        case PDO::FETCH_INTO:
+          $stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1);
+          break;
+        default:
+          $stmt->setFetchMode($fetchMode);
+      }
+    }
         return $stmt->fetch();
     }
 
@@ -439,21 +439,21 @@ class DooSqlMagic {
     */
     public function fetchAll($query, $param = null, $fetchMode = null, $fetchModeOptionalParam1=null, $fetchModeOptionalParam2=array()) {
         $stmt = $this->query($query, $param);
-		if($fetchMode!==null) {
-			switch($fetchMode) {
-				case PDO::FETCH_COLUMN:
-					$stmt->setFetchMode($fetchMode, ($fetchModeOptionalParam1 !== null) ? $fetchModeOptionalParam1 : 0);
-					break;
-				case PDO::FETCH_CLASS:
-					$stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1, $fetchModeOptionalParam2);
-					break;
-				case PDO::FETCH_INTO:
-					$stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1);
-					break;
-				default:
-					$stmt->setFetchMode($fetchMode);
-			}
-		}
+    if($fetchMode!==null) {
+      switch($fetchMode) {
+        case PDO::FETCH_COLUMN:
+          $stmt->setFetchMode($fetchMode, ($fetchModeOptionalParam1 !== null) ? $fetchModeOptionalParam1 : 0);
+          break;
+        case PDO::FETCH_CLASS:
+          $stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1, $fetchModeOptionalParam2);
+          break;
+        case PDO::FETCH_INTO:
+          $stmt->setFetchMode($fetchMode, $fetchModeOptionalParam1);
+          break;
+        default:
+          $stmt->setFetchMode($fetchMode);
+      }
+    }
         return $stmt->fetchAll();
     }
 
@@ -502,20 +502,20 @@ class DooSqlMagic {
         return $this->pdo->quote($string, $type);
     }
 
-	public function quoteArray($array, $type=null) {
-		if (!is_array($array)) {
-			return $this->quote($array, $type);
-		}
-		$numItems = count($array);
-		for($i=0; $i<$numItems; $i++) {
-			if (is_array($array[$i])) {
-				$array[$i] = $this->quoteArray($array[$i], $type);
-			} else {
-				$array[$i] = $this->quote($array[$i]);
-			}
-		}
-		return $array;
-	}
+  public function quoteArray($array, $type=null) {
+    if (!is_array($array)) {
+      return $this->quote($array, $type);
+    }
+    $numItems = count($array);
+    for($i=0; $i<$numItems; $i++) {
+      if (is_array($array[$i])) {
+        $array[$i] = $this->quoteArray($array[$i], $type);
+      } else {
+        $array[$i] = $this->quote($array[$i]);
+      }
+    }
+    return $array;
+  }
 
     /**
      * Returns the last inserted record's id
@@ -543,13 +543,13 @@ class DooSqlMagic {
 
     //---------------------------------- SQL generator functions ------------------------
 
-	/**
+  /**
      * Retrieve model by one record.
      *
      * @param array $opt Options for the query. Available options see @see find()
      * @return mixed A model object or associateve array of the queried result
      */
-	public function getOne($model, $opt=null){
+  public function getOne($model, $opt=null){
         if($opt!==null){
             $opt['limit'] = 1;
             return $this->find($model, $opt);
@@ -576,38 +576,38 @@ class DooSqlMagic {
                 if(isset($v) && in_array($o, $model->_fields)){
                     if( is_object($v) ){
                         $firstChr = substr($v, 0, 1);
-						$andOrStr = ($v->useOrStatement) ? 'OR ' : 'AND';
+            $andOrStr = ($v->useOrStatement) ? 'OR ' : 'AND';
 
                         if(ctype_punct($firstChr)){
-							if(ctype_punct(substr($v, 1, 1))){
-								$firstChr .= substr($v, 1, 1);
-								$wvalue = substr($v, 2);
-							}else{
-								$wvalue = substr($v, 1);
-							}
-							if($v->skipBinding === TRUE){
-								$wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr " . $wvalue;
-							}else{
-								$wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr ?";
-								$where_values[] = substr($v, 1);
-							}
+              if(ctype_punct(substr($v, 1, 1))){
+                $firstChr .= substr($v, 1, 1);
+                $wvalue = substr($v, 2);
+              }else{
+                $wvalue = substr($v, 1);
+              }
+              if($v->skipBinding === TRUE){
+                $wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr " . $wvalue;
+              }else{
+                $wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr ?";
+                $where_values[] = substr($v, 1);
+              }
                         }else{
-							if($v->skipBinding === TRUE){
+              if($v->skipBinding === TRUE){
                                 $wheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
-							}else{
-								if(strpos(strtoupper($v), 'LIKE')===0){
-									preg_match('/^LIKE[ ]{1,}[\'\"]{1}(.+)[\'\"]{1}[ ]{1,}$/i', $v, $matches);
-									$wheresql .= " {$andOrStr} {$obj['_table']}.$o LIKE ?";
-									$where_values[] = $matches[1];
-								}
-								else if(strpos(strtoupper($v), 'IS')===0){
-									$wheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
-								}
-								else{
-									$wheresql .= " {$andOrStr} {$obj['_table']}.$o=?";
-									$where_values[] = $v;
-								}
-							}
+              }else{
+                if(strpos(strtoupper($v), 'LIKE')===0){
+                  preg_match('/^LIKE[ ]{1,}[\'\"]{1}(.+)[\'\"]{1}[ ]{1,}$/i', $v, $matches);
+                  $wheresql .= " {$andOrStr} {$obj['_table']}.$o LIKE ?";
+                  $where_values[] = $matches[1];
+                }
+                else if(strpos(strtoupper($v), 'IS')===0){
+                  $wheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
+                }
+                else{
+                  $wheresql .= " {$andOrStr} {$obj['_table']}.$o=?";
+                  $where_values[] = $v;
+                }
+              }
                         }
                     }else{
                         $wheresql .= " AND {$obj['_table']}.$o=?";
@@ -654,85 +654,85 @@ class DooSqlMagic {
             $sqladd['where'] ='';
         }
 
-		if (isset($opt['filters']) && is_array($opt['filters'])) {
-			$sqladd['filter'] = '';
-			foreach ($opt['filters'] as $filter) {
-				$fmodel = null;
-				if(is_object($filter['model'])){
-					$fmodel = $filter['model'];
-					$fTableName = $fmodel->_table;
-					$fmodel_class = get_class($fmodel);
-				}else{
-					$fmodel = $this->loadModel($filter['model'], true);
-					$fTableName = $fmodel->_table;
-					$fmodel_class = $filter['model'];
-				}
+    if (isset($opt['filters']) && is_array($opt['filters'])) {
+      $sqladd['filter'] = '';
+      foreach ($opt['filters'] as $filter) {
+        $fmodel = null;
+        if(is_object($filter['model'])){
+          $fmodel = $filter['model'];
+          $fTableName = $fmodel->_table;
+          $fmodel_class = get_class($fmodel);
+        }else{
+          $fmodel = $this->loadModel($filter['model'], true);
+          $fTableName = $fmodel->_table;
+          $fmodel_class = $filter['model'];
+        }
 
-				list($fmodel_rtype, $fparams ) = self::relationType($this->map, $class_name, $fmodel_class);
+        list($fmodel_rtype, $fparams ) = self::relationType($this->map, $class_name, $fmodel_class);
 
-				if(isset($filter['joinType'])){
-					$joinType = $filter['joinType'] . ' JOIN';
-				}else{
-					$joinType = 'JOIN';
-				}
+        if(isset($filter['joinType'])){
+          $joinType = $filter['joinType'] . ' JOIN';
+        }else{
+          $joinType = 'JOIN';
+        }
 
-				switch($fmodel_rtype) {
-					case 'has_one':
-						$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$model->_primarykey} ";
-						break;
-					case 'belongs_to':
-						list($frtype, $ffkey ) = self::relationType($this->map, $fmodel_class, $class_name);
-						$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$ffkey['foreign_key']} ";
-						break;
-					case 'has_many':
-						list($fmtype, $fmparams) = self::relationType($this->map, $fmodel_class, $class_name);
-						if ($fmtype == 'has_many') {
-							$sqladd['filter'] .= "{$joinType} {$fparams['through']} ON {$model->_table}.{$model->_primarykey} = {$fparams['through']}.{$fparams['foreign_key']}\n";
-							$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fmodel->_primarykey} = {$fparams['through']}.{$fmparams['foreign_key']} ";
-						} else {
-							$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$model->_table}.{$fmparams['foreign_key']} = {$fTableName}.{$fparams['foreign_key']} ";
-						}
-						break;
-					default:
-						throw new Exception('Table Relationship not defined for ' . $class_name . ' to ' . $fmodel_class);
-				}
+        switch($fmodel_rtype) {
+          case 'has_one':
+            $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$model->_primarykey} ";
+            break;
+          case 'belongs_to':
+            list($frtype, $ffkey ) = self::relationType($this->map, $fmodel_class, $class_name);
+            $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$ffkey['foreign_key']} ";
+            break;
+          case 'has_many':
+            list($fmtype, $fmparams) = self::relationType($this->map, $fmodel_class, $class_name);
+            if ($fmtype == 'has_many') {
+              $sqladd['filter'] .= "{$joinType} {$fparams['through']} ON {$model->_table}.{$model->_primarykey} = {$fparams['through']}.{$fparams['foreign_key']}\n";
+              $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fmodel->_primarykey} = {$fparams['through']}.{$fmparams['foreign_key']} ";
+            } else {
+              $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$model->_table}.{$fmparams['foreign_key']} = {$fTableName}.{$fparams['foreign_key']} ";
+            }
+            break;
+          default:
+            throw new Exception('Table Relationship not defined for ' . $class_name . ' to ' . $fmodel_class);
+        }
 
-				if(isset($filter['where'])){
-					if($sqladd['where']==''){
-						$sqladd['where'] .= ' WHERE '.$filter['where'];
-					}else{
-						$sqladd['where'] .= ' AND '.$filter['where'].' ';
-					}
-					//merge the include param with the Where params, at the end
-					if(isset($filter['param'])){
-						if(isset($opt['param']) && isset($where_values))
-							 $where_values = array_merge( $where_values, $filter['param']);
-						else if(isset($opt['param']))
-							$opt['param'] = array_merge( $opt['param'], $filter['param']);
-						else if(isset($where_values))
-							$where_values = array_merge( $where_values, $filter['param']);
-						else
-							$where_values = $filter['param'];
-					}
-				}
-			}
-		} else {
-			$sqladd['filter'] = '';
-		}
+        if(isset($filter['where'])){
+          if($sqladd['where']==''){
+            $sqladd['where'] .= ' WHERE '.$filter['where'];
+          }else{
+            $sqladd['where'] .= ' AND '.$filter['where'].' ';
+          }
+          //merge the include param with the Where params, at the end
+          if(isset($filter['param'])){
+            if(isset($opt['param']) && isset($where_values))
+               $where_values = array_merge( $where_values, $filter['param']);
+            else if(isset($opt['param']))
+              $opt['param'] = array_merge( $opt['param'], $filter['param']);
+            else if(isset($where_values))
+              $where_values = array_merge( $where_values, $filter['param']);
+            else
+              $where_values = $filter['param'];
+          }
+        }
+      }
+    } else {
+      $sqladd['filter'] = '';
+    }
 
-		//GROUP BY
-		if (isset($opt['groupby'])) {
-			$sqladd['groupby'] = 'GROUP BY ' . $opt['groupby'];
-		} else {
-			$sqladd['groupby'] = '';
-		}
+    //GROUP BY
+    if (isset($opt['groupby'])) {
+      $sqladd['groupby'] = 'GROUP BY ' . $opt['groupby'];
+    } else {
+      $sqladd['groupby'] = '';
+    }
 
-		//HAVINGs
-		if (isset($opt['having'])) {
-			$sqladd['having'] = 'HAVING ' . $opt['having'];
-		} else {
-			$sqladd['having'] = '';
-		}
+    //HAVINGs
+    if (isset($opt['having'])) {
+      $sqladd['having'] = 'HAVING ' . $opt['having'];
+    } else {
+      $sqladd['having'] = '';
+    }
 
         //if asc is defined first then ORDER BY xxx ASC, xxx DESC
         //else Order by xxx DESC, xxx ASC
@@ -815,38 +815,38 @@ class DooSqlMagic {
                 if(isset($v) && in_array($o, $model->_fields)){
                     if( is_object($v) ){
                         $firstChr = substr($v, 0, 1);
-						$andOrStr = ($v->useOrStatement) ? 'OR ' : 'AND';
+            $andOrStr = ($v->useOrStatement) ? 'OR ' : 'AND';
 
                         if(ctype_punct($firstChr)){
-							if(ctype_punct(substr($v, 1, 1))){
-								$firstChr .= substr($v, 1, 1);
-								$wvalue = substr($v, 2);
-							}else{
-								$wvalue = substr($v, 1);
-							}
-							if($v->skipBinding === TRUE){
-								$wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr " . $wvalue;
-							}else{
-								$wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr ?";
-								$where_values[] = substr($v, 1);
-							}
+              if(ctype_punct(substr($v, 1, 1))){
+                $firstChr .= substr($v, 1, 1);
+                $wvalue = substr($v, 2);
+              }else{
+                $wvalue = substr($v, 1);
+              }
+              if($v->skipBinding === TRUE){
+                $wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr " . $wvalue;
+              }else{
+                $wheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr ?";
+                $where_values[] = substr($v, 1);
+              }
                         }else{
-							if($v->skipBinding === TRUE){
+              if($v->skipBinding === TRUE){
                                 $wheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
-							}else{
-								if(strpos(strtoupper($v), 'LIKE')===0){
-									preg_match('/^LIKE[ ]{1,}[\'\"]{1}(.+)[\'\"]{1}[ ]{1,}$/i', $v, $matches);
-									$wheresql .= " {$andOrStr} {$obj['_table']}.$o LIKE ?";
-									$where_values[] = $matches[1];
-								}
-								else if(strpos(strtoupper($v), 'IS')===0){
-									$wheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
-								}
-								else{
-									$wheresql .= " {$andOrStr} {$obj['_table']}.$o=?";
-									$where_values[] = $v;
-								}
-							}
+              }else{
+                if(strpos(strtoupper($v), 'LIKE')===0){
+                  preg_match('/^LIKE[ ]{1,}[\'\"]{1}(.+)[\'\"]{1}[ ]{1,}$/i', $v, $matches);
+                  $wheresql .= " {$andOrStr} {$obj['_table']}.$o LIKE ?";
+                  $where_values[] = $matches[1];
+                }
+                else if(strpos(strtoupper($v), 'IS')===0){
+                  $wheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
+                }
+                else{
+                  $wheresql .= " {$andOrStr} {$obj['_table']}.$o=?";
+                  $where_values[] = $v;
+                }
+              }
                         }
                     }else{
                         $wheresql .= " AND {$obj['_table']}.$o=?";
@@ -903,19 +903,19 @@ class DooSqlMagic {
             $sqladd['where'] ='';
         }
 
-		//GROUP BY
-		if (isset($opt['groupby'])) {
-			$sqladd['groupby'] = 'GROUP BY ' . $opt['groupby'];
-		} else {
-			$sqladd['groupby'] = '';
-		}
+    //GROUP BY
+    if (isset($opt['groupby'])) {
+      $sqladd['groupby'] = 'GROUP BY ' . $opt['groupby'];
+    } else {
+      $sqladd['groupby'] = '';
+    }
 
-		//HAVINGs
-		if (isset($opt['having'])) {
-			$sqladd['having'] = 'HAVING ' . $opt['having'];
-		} else {
-			$sqladd['having'] = '';
-		}
+    //HAVINGs
+    if (isset($opt['having'])) {
+      $sqladd['having'] = 'HAVING ' . $opt['having'];
+    } else {
+      $sqladd['having'] = '';
+    }
 
         //ASC ORDER
         if(isset($opt['asc'])){
@@ -929,6 +929,12 @@ class DooSqlMagic {
             $sqladd['order']= 'ORDER BY ' . $opt['desc'] . ' DESC';
         }
 
+        /* add endlimit option */
+        if (!isset($opt['endlimit']))
+        {
+           $opt['endlimit'] = FALSE;
+        }
+
         //Custom ending
         if(isset($opt['custom'])){
             $sqladd['custom']= $opt['custom'];
@@ -939,18 +945,18 @@ class DooSqlMagic {
 
         //get define relation, what type, which model
         #list($rtype,$rparams) = $model->relationType($rmodel);
-		if (is_object($rmodel)) {
-			$relatedmodel = $rmodel;
-			$rmodel =  get_class($relatedmodel);
-			$rtable = $relatedmodel->_table;
+    if (is_object($rmodel)) {
+      $relatedmodel = $rmodel;
+      $rmodel =  get_class($relatedmodel);
+      $rtable = $relatedmodel->_table;
 
-			list($rtype,$rparams) = self::relationType($this->map, $class_name, $rmodel);
-			if($rtype==NULL)
-				throw new SqlMagicException("Model $class_name does not relate to $rmodel", SqlMagicException::RelationNotFound);
+      list($rtype,$rparams) = self::relationType($this->map, $class_name, $rmodel);
+      if($rtype==NULL)
+        throw new SqlMagicException("Model $class_name does not relate to $rmodel", SqlMagicException::RelationNotFound);
 
-			// As we have an object we will check to see what query params are set
-			// This will be used to run a nested select
-			$obj = get_object_vars($relatedmodel);
+      // As we have an object we will check to see what query params are set
+      // This will be used to run a nested select
+      $obj = get_object_vars($relatedmodel);
             $nestedwheresql ='';
             $nested_where_values = array();
             foreach($obj as $o=>$v){
@@ -958,72 +964,72 @@ class DooSqlMagic {
 
                     if( is_object($v) ){
                         $firstChr = substr($v, 0, 1);
-						$andOrStr = ($v->useOrStatement) ? 'OR ' : 'AND';
+            $andOrStr = ($v->useOrStatement) ? 'OR ' : 'AND';
 
                         if(ctype_punct($firstChr)){
-							if(ctype_punct(substr($v, 1, 1))){
-								$firstChr .= substr($v, 1, 1);
-								$wvalue = substr($v, 2);
-							}else{
-								$wvalue = substr($v, 1);
-							}
-							if($v->skipBinding === TRUE){
-								$nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr " . $wvalue;
-							}else{
-								$nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr ?";
-								$nestedwheresql[] = substr($v, 1);
-							}
+              if(ctype_punct(substr($v, 1, 1))){
+                $firstChr .= substr($v, 1, 1);
+                $wvalue = substr($v, 2);
+              }else{
+                $wvalue = substr($v, 1);
+              }
+              if($v->skipBinding === TRUE){
+                $nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr " . $wvalue;
+              }else{
+                $nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o $firstChr ?";
+                $nestedwheresql[] = substr($v, 1);
+              }
                         }else{
-							if($v->skipBinding === TRUE){
+              if($v->skipBinding === TRUE){
                                 $nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
-							}else{
-								if(strpos(strtoupper($v), 'LIKE')===0){
-									preg_match('/^LIKE[ ]{1,}[\'\"]{1}(.+)[\'\"]{1}[ ]{1,}$/i', $v, $matches);
-									$nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o LIKE ?";
-									$nested_where_values[] = $matches[1];
-								}
-								else if(strpos(strtoupper($v), 'IS')===0){
-									$nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
-								}
-								else{
-									$nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o=?";
-									$nested_where_values[] = $v;
-								}
-							}
+              }else{
+                if(strpos(strtoupper($v), 'LIKE')===0){
+                  preg_match('/^LIKE[ ]{1,}[\'\"]{1}(.+)[\'\"]{1}[ ]{1,}$/i', $v, $matches);
+                  $nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o LIKE ?";
+                  $nested_where_values[] = $matches[1];
+                }
+                else if(strpos(strtoupper($v), 'IS')===0){
+                  $nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o $v";
+                }
+                else{
+                  $nestedwheresql .= " {$andOrStr} {$obj['_table']}.$o=?";
+                  $nested_where_values[] = $v;
+                }
+              }
                         }
                     }else{
                         $nestedwheresql .= " AND {$obj['_table']}.$o=?";
                         $nested_where_values[] = $v;
                     }
                 }
-			}
+      }
 
-			if($nestedwheresql!=''){
-				$nestedwheresql = substr($nestedwheresql, 5);
+      if($nestedwheresql!=''){
+        $nestedwheresql = substr($nestedwheresql, 5);
                 $sqladd['rNestedQuery'] = " (SELECT * FROM {$relatedmodel->_table} WHERE {$nestedwheresql}) AS ";
             } else {
-				$sqladd['rNestedQuery'] = '';
-			}
+        $sqladd['rNestedQuery'] = '';
+      }
 
-			if (isset($where_values) && isset($nested_where_values)) {
-				$where_values = array_merge($nested_where_values, $where_values);
-			} elseif (isset($nested_where_values)) {
-				$where_values = $nested_where_values;
-			}
+      if (isset($where_values) && isset($nested_where_values)) {
+        $where_values = array_merge($nested_where_values, $where_values);
+      } elseif (isset($nested_where_values)) {
+        $where_values = $nested_where_values;
+      }
 
-		} else {
-			list($rtype,$rparams) = self::relationType($this->map, $class_name, $rmodel);
-			if($rtype==NULL)
-				throw new SqlMagicException("Model $class_name does not relate to $rmodel", SqlMagicException::RelationNotFound);
+    } else {
+      list($rtype,$rparams) = self::relationType($this->map, $class_name, $rmodel);
+      if($rtype==NULL)
+        throw new SqlMagicException("Model $class_name does not relate to $rmodel", SqlMagicException::RelationNotFound);
 
-			$this->loadModel($rmodel);
-			$relatedmodel = new $rmodel;
-			$rtable = $relatedmodel->_table;
+      $this->loadModel($rmodel);
+      $relatedmodel = new $rmodel;
+      $rtable = $relatedmodel->_table;
 
-			#echo "$class_name $rtype $rmodel( $rtable )";
+      #echo "$class_name $rtype $rmodel( $rtable )";
 
-			$sqladd['rNestedQuery'] = '';
-		}
+      $sqladd['rNestedQuery'] = '';
+    }
 
         //reverse relation (belongs_to), checking params such as foreign_key
         #list($mtype,$mparams) = $relatedmodel->relationType($class_name);
@@ -1072,78 +1078,78 @@ class DooSqlMagic {
         foreach($repeated_vars as $r){
             //dun add user defined class properties that are not used in database
             if(!in_array($r, $defined_class_vars))continue;
-			if($r==$relatedmodel->_primarykey){
-				$alias = "_{$model->_table}__$r";
-				$ralias = "_{$relatedmodel->_table}__$r";
-				$sqladd['select'] .= ", {$model->_table}.$r AS $alias, {$relatedmodel->_table}.$r AS $ralias";
-				$alias_vars[$alias] = $r;
-				$ralias_vars[$ralias] = $r;
-				$model_vars[] = $alias;
-				$rmodel_vars[] = $ralias;
+      if($r==$relatedmodel->_primarykey){
+        $alias = "_{$model->_table}__$r";
+        $ralias = "_{$relatedmodel->_table}__$r";
+        $sqladd['select'] .= ", {$model->_table}.$r AS $alias, {$relatedmodel->_table}.$r AS $ralias";
+        $alias_vars[$alias] = $r;
+        $ralias_vars[$ralias] = $r;
+        $model_vars[] = $alias;
+        $rmodel_vars[] = $ralias;
 
-				if(isset($opt['select'])){
-					if($opt['select'][0]==='*'){
-						$sqladd['select'] .= ", {$relatedmodel->_table}.$r";
-						$opt['select'] .= ", {$relatedmodel->_table}.$r";
-					}
-					else if(preg_match('/,(\s+)?'.$relatedmodel->_table .'\.\*/', ','.$opt['select'])){
-						$sqladd['select'] .= ", {$relatedmodel->_table}.$r";
-						$opt['select'] .= ", {$relatedmodel->_table}.$r";
-					}
-				}else{
-					$sqladd['select'] .= ", {$relatedmodel->_table}.$r";
-					$opt['select'] = "{$relatedmodel->_table}.$r";
-				}
-			}
-			else {
-				if(isset($opt['select']) && strpos($opt['select'], ',')!==false){
-					$modelHasSelectField = strpos($opt['select'], "{$model->_table}.$r")!==false;
-					$rmodelHasSelectField = strpos($opt['select'], "{$relatedmodel->_table}.$r")!==false;
+        if(isset($opt['select'])){
+          if($opt['select'][0]==='*'){
+            $sqladd['select'] .= ", {$relatedmodel->_table}.$r";
+            $opt['select'] .= ", {$relatedmodel->_table}.$r";
+          }
+          else if(preg_match('/,(\s+)?'.$relatedmodel->_table .'\.\*/', ','.$opt['select'])){
+            $sqladd['select'] .= ", {$relatedmodel->_table}.$r";
+            $opt['select'] .= ", {$relatedmodel->_table}.$r";
+          }
+        }else{
+          $sqladd['select'] .= ", {$relatedmodel->_table}.$r";
+          $opt['select'] = "{$relatedmodel->_table}.$r";
+        }
+      }
+      else {
+        if(isset($opt['select']) && strpos($opt['select'], ',')!==false){
+          $modelHasSelectField = strpos($opt['select'], "{$model->_table}.$r")!==false;
+          $rmodelHasSelectField = strpos($opt['select'], "{$relatedmodel->_table}.$r")!==false;
 
-					if($opt['select'][0]==='*'){
-						$modelHasSelectField = $rmodelHasSelectField = true;
-					}else{
-						if($modelHasSelectField===false && preg_match('/,(\s+)?'.$model->_table .'\.\*/', ',' . $opt['select'])){
-							$modelHasSelectField = true;
-						}
-						if($rmodelHasSelectField===false && preg_match('/,(\s+)?'.$relatedmodel->_table .'\.\*/', ',' . $opt['select'])){
-							$rmodelHasSelectField = true;
-						}
-					}
-				}
-				else{
-					//select *
-					$modelHasSelectField = $rmodelHasSelectField = true;
-				}
+          if($opt['select'][0]==='*'){
+            $modelHasSelectField = $rmodelHasSelectField = true;
+          }else{
+            if($modelHasSelectField===false && preg_match('/,(\s+)?'.$model->_table .'\.\*/', ',' . $opt['select'])){
+              $modelHasSelectField = true;
+            }
+            if($rmodelHasSelectField===false && preg_match('/,(\s+)?'.$relatedmodel->_table .'\.\*/', ',' . $opt['select'])){
+              $rmodelHasSelectField = true;
+            }
+          }
+        }
+        else{
+          //select *
+          $modelHasSelectField = $rmodelHasSelectField = true;
+        }
 
-				if($modelHasSelectField===true && $rmodelHasSelectField===true){
-//					echo "\n+{$model->_table}.$r\n";
-//					echo "+{$relatedmodel->_table}.$r\n\n";
-					$alias = "_{$model->_table}__$r";
-					$ralias = "_{$relatedmodel->_table}__$r";
-					$sqladd['select'] .= ", {$model->_table}.$r AS $alias, {$relatedmodel->_table}.$r AS $ralias";
-					$alias_vars[$alias] = $r;
-					$ralias_vars[$ralias] = $r;
-					$model_vars[] = $alias;
-					$rmodel_vars[] = $ralias;
-				}
-				else if($modelHasSelectField===true){
-//					echo "+{$model->_table}.$r\n\n";
-					$alias = "_{$model->_table}__$r";
-					$sqladd['select'] .= ", {$model->_table}.$r AS $alias";
-					$alias_vars[$alias] = $r;
-					$model_vars[] = $alias;
-					$ralias_vars[$r] = false;
-				}
-				else if($rmodelHasSelectField===true){
-//					echo "+{$relatedmodel->_table}.$r\n\n";
-					$ralias = "_{$relatedmodel->_table}__$r";
-					$sqladd['select'] .= ", {$relatedmodel->_table}.$r AS $ralias";
-					$ralias_vars[$ralias] = $r;
-					$rmodel_vars[] = $ralias;
-					$alias_vars[$r] = false;
-				}
-			}
+        if($modelHasSelectField===true && $rmodelHasSelectField===true){
+//          echo "\n+{$model->_table}.$r\n";
+//          echo "+{$relatedmodel->_table}.$r\n\n";
+          $alias = "_{$model->_table}__$r";
+          $ralias = "_{$relatedmodel->_table}__$r";
+          $sqladd['select'] .= ", {$model->_table}.$r AS $alias, {$relatedmodel->_table}.$r AS $ralias";
+          $alias_vars[$alias] = $r;
+          $ralias_vars[$ralias] = $r;
+          $model_vars[] = $alias;
+          $rmodel_vars[] = $ralias;
+        }
+        else if($modelHasSelectField===true){
+//          echo "+{$model->_table}.$r\n\n";
+          $alias = "_{$model->_table}__$r";
+          $sqladd['select'] .= ", {$model->_table}.$r AS $alias";
+          $alias_vars[$alias] = $r;
+          $model_vars[] = $alias;
+          $ralias_vars[$r] = false;
+        }
+        else if($rmodelHasSelectField===true){
+//          echo "+{$relatedmodel->_table}.$r\n\n";
+          $ralias = "_{$relatedmodel->_table}__$r";
+          $sqladd['select'] .= ", {$relatedmodel->_table}.$r AS $ralias";
+          $ralias_vars[$ralias] = $r;
+          $rmodel_vars[] = $ralias;
+          $alias_vars[$r] = false;
+        }
+      }
         }
 
         #print_r($model_vars);
@@ -1163,133 +1169,133 @@ class DooSqlMagic {
                 $tmodel_class = $opt['include'];
             }
 
-			list($tmodel_rtype, $tmodel_fk ) = self::relationType($this->map, $class_name, $tmodel_class);
-			$tmodel_fk = $tmodel_fk['foreign_key'];
+      list($tmodel_rtype, $tmodel_fk ) = self::relationType($this->map, $class_name, $tmodel_class);
+      $tmodel_fk = $tmodel_fk['foreign_key'];
 
-			if ($rtype == 'has_many' && $mtype == 'has_many' && $tmodel->_table == $rparams['through']) { // Is the include for the joining table?
-				$sqladd['include'] = '';
-			} else {
-				//echo $tmodel_rtype.'<br/>';
-				//include Join Type
-				if(isset($opt['includeType'])){
-					$sqladd['include'] = $opt['includeType'] . ' JOIN '. $sqladd['include'];
-				}else{
-					$sqladd['include'] = ' JOIN ' . $sqladd['include'];
-				}
-				if($rtype=='belongs_to'){
-					list($trtype, $tfkey ) = self::relationType($this->map, $tmodel_class, $class_name);
-					//echo '<h1>TMODEL '.$tfkey['foreign_key'].'</h1>';
-					$sqladd['include'] .= " ON {$tmodel->_table}.$tmodel_fk = {$model->_table}.{$tfkey['foreign_key']} ";
-				}else{
-					$sqladd['include'] .= " ON {$tmodel->_table}.$tmodel_fk = {$model->_table}.{$model->_primarykey} ";
-				}
-				#print_r($sqladd['where']);
-				if(isset($opt['includeWhere'])){
-					if($sqladd['where']==''){
-						$sqladd['where'] .= ' WHERE '.$opt['includeWhere'];
-					}else{
-						$sqladd['where'] .= ' AND '.$opt['includeWhere'].' ';
-					}
-					//merge the include param with the Where params, at the end
-					if(isset($opt['includeParam'])){
-						if(isset($opt['param']) && isset($where_values))
-							 $where_values = array_merge( $where_values, $opt['includeParam']);
-						else if(isset($opt['param']))
-							$opt['param'] = array_merge( $opt['param'], $opt['includeParam']);
-						else if(isset($where_values))
-							$where_values = array_merge( $where_values, $opt['includeParam']);
-						else
-							$where_values = $opt['includeParam'];
-					}
-				}
-			}
-			//edit the select part since now 3 tables are involved, might have 3 repeating field names in all tables.
-			//SELECT model.*, related_model.*, includemodel.id AS _t_includemodel_id, includemodel.title AS _t_includemodel_title, ...
-			$tselect_field = '';
-			foreach($tmodel->_fields as $tfname){
-				$tselect_field .= $tmodel->_table.'.'.$tfname . ' AS _t_' . $tmodel->_table . '_' . $tfname . ', ';
-			}
-			if(strpos($sqladd['select'], '*,')===0){
-				$sqladd['select'] = substr($sqladd['select'], 2);
-				$sqladd['select'] = "{$model->_table}.*, {$relatedmodel->_table}.*, $tselect_field" . $sqladd['select'];
-			}
+      if ($rtype == 'has_many' && $mtype == 'has_many' && $tmodel->_table == $rparams['through']) { // Is the include for the joining table?
+        $sqladd['include'] = '';
+      } else {
+        //echo $tmodel_rtype.'<br/>';
+        //include Join Type
+        if(isset($opt['includeType'])){
+          $sqladd['include'] = $opt['includeType'] . ' JOIN '. $sqladd['include'];
+        }else{
+          $sqladd['include'] = ' JOIN ' . $sqladd['include'];
+        }
+        if($rtype=='belongs_to'){
+          list($trtype, $tfkey ) = self::relationType($this->map, $tmodel_class, $class_name);
+          //echo '<h1>TMODEL '.$tfkey['foreign_key'].'</h1>';
+          $sqladd['include'] .= " ON {$tmodel->_table}.$tmodel_fk = {$model->_table}.{$tfkey['foreign_key']} ";
+        }else{
+          $sqladd['include'] .= " ON {$tmodel->_table}.$tmodel_fk = {$model->_table}.{$model->_primarykey} ";
+        }
+        #print_r($sqladd['where']);
+        if(isset($opt['includeWhere'])){
+          if($sqladd['where']==''){
+            $sqladd['where'] .= ' WHERE '.$opt['includeWhere'];
+          }else{
+            $sqladd['where'] .= ' AND '.$opt['includeWhere'].' ';
+          }
+          //merge the include param with the Where params, at the end
+          if(isset($opt['includeParam'])){
+            if(isset($opt['param']) && isset($where_values))
+               $where_values = array_merge( $where_values, $opt['includeParam']);
+            else if(isset($opt['param']))
+              $opt['param'] = array_merge( $opt['param'], $opt['includeParam']);
+            else if(isset($where_values))
+              $where_values = array_merge( $where_values, $opt['includeParam']);
+            else
+              $where_values = $opt['includeParam'];
+          }
+        }
+      }
+      //edit the select part since now 3 tables are involved, might have 3 repeating field names in all tables.
+      //SELECT model.*, related_model.*, includemodel.id AS _t_includemodel_id, includemodel.title AS _t_includemodel_title, ...
+      $tselect_field = '';
+      foreach($tmodel->_fields as $tfname){
+        $tselect_field .= $tmodel->_table.'.'.$tfname . ' AS _t_' . $tmodel->_table . '_' . $tfname . ', ';
+      }
+      if(strpos($sqladd['select'], '*,')===0){
+        $sqladd['select'] = substr($sqladd['select'], 2);
+        $sqladd['select'] = "{$model->_table}.*, {$relatedmodel->_table}.*, $tselect_field" . $sqladd['select'];
+      }
 
         }else{
             $sqladd['include']='';
         }
 
 
-		if (isset($opt['filters']) && is_array($opt['filters'])) {
-			$sqladd['filter'] = '';
-			foreach ($opt['filters'] as $filter) {
-				$fmodel = null;
-				if(is_object($filter['model'])){
-					$fmodel = $filter['model'];
-					$fTableName = $fmodel->_table;
-					$fmodel_class = get_class($fmodel);
-				}else{
-					$fmodel = $this->loadModel($filter['model'], true);
-					$fTableName = $fmodel->_table;
-					$fmodel_class = $filter['model'];
-				}
+    if (isset($opt['filters']) && is_array($opt['filters'])) {
+      $sqladd['filter'] = '';
+      foreach ($opt['filters'] as $filter) {
+        $fmodel = null;
+        if(is_object($filter['model'])){
+          $fmodel = $filter['model'];
+          $fTableName = $fmodel->_table;
+          $fmodel_class = get_class($fmodel);
+        }else{
+          $fmodel = $this->loadModel($filter['model'], true);
+          $fTableName = $fmodel->_table;
+          $fmodel_class = $filter['model'];
+        }
 
 
-				list($fmodel_rtype, $fparams ) = self::relationType($this->map, $class_name, $fmodel_class);
+        list($fmodel_rtype, $fparams ) = self::relationType($this->map, $class_name, $fmodel_class);
 
-				if(isset($filter['joinType'])){
-					$joinType = $filter['joinType'] . ' JOIN';
-				}else{
-					$joinType = 'JOIN';
-				}
+        if(isset($filter['joinType'])){
+          $joinType = $filter['joinType'] . ' JOIN';
+        }else{
+          $joinType = 'JOIN';
+        }
 
-				switch($fmodel_rtype) {
-					case 'has_one':
-						$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$model->_primarykey} ";
-						break;
-					case 'belongs_to':
-						list($frtype, $ffkey ) = self::relationType($this->map, $fmodel_class, $class_name);
-						$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$ffkey['foreign_key']} ";
-						break;
-					case 'has_many':
-						list($fmtype, $fmparams) = self::relationType($this->map, $fmodel_class, $class_name);
-						if ($fmtype == 'has_many') {
-							$sqladd['filter'] .= "{$joinType} {$fparams['through']} ON {$model->_table}.{$model->_primarykey} = {$fparams['through']}.{$fparams['foreign_key']}\n";
-							$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fmodel->_primarykey} = {$fparams['through']}.{$fmparams['foreign_key']} ";
-						} else {
-							$sqladd['filter'] .= "{$joinType} {$fTableName} ON {$model->_table}.{$fmparams['foreign_key']} = {$fTableName}.{$fparams['foreign_key']} ";
-						}
-				}
+        switch($fmodel_rtype) {
+          case 'has_one':
+            $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$model->_primarykey} ";
+            break;
+          case 'belongs_to':
+            list($frtype, $ffkey ) = self::relationType($this->map, $fmodel_class, $class_name);
+            $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fparams['foreign_key']} = {$model->_table}.{$ffkey['foreign_key']} ";
+            break;
+          case 'has_many':
+            list($fmtype, $fmparams) = self::relationType($this->map, $fmodel_class, $class_name);
+            if ($fmtype == 'has_many') {
+              $sqladd['filter'] .= "{$joinType} {$fparams['through']} ON {$model->_table}.{$model->_primarykey} = {$fparams['through']}.{$fparams['foreign_key']}\n";
+              $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$fmodel->_table}.{$fmodel->_primarykey} = {$fparams['through']}.{$fmparams['foreign_key']} ";
+            } else {
+              $sqladd['filter'] .= "{$joinType} {$fTableName} ON {$model->_table}.{$fmparams['foreign_key']} = {$fTableName}.{$fparams['foreign_key']} ";
+            }
+        }
 
 
-				#print_r($sqladd['where']);
-				if(isset($filter['where'])){
-					if($sqladd['where']==''){
-						$sqladd['where'] .= ' WHERE '.$filter['where'];
-					}else{
-						$sqladd['where'] .= ' AND '.$filter['where'].' ';
-					}
-					//merge the include param with the Where params, at the end
-					if(isset($filter['param'])){
-						if(isset($opt['param']) && isset($where_values))
-							 $where_values = array_merge( $where_values, $filter['param']);
-						else if(isset($opt['param']))
-							$opt['param'] = array_merge( $opt['param'], $filter['param']);
-						else if(isset($where_values))
-							$where_values = array_merge( $where_values, $filter['param']);
-						else
-							$where_values = $filter['param'];
-					}
-				}
-				//edit the select part since now we do not want the filter table fields. Not needed if using include as its adjusted select already
-				//SELECT model.*, related_model.*, includemodel.id AS _t_includemodel_id, includemodel.title AS _t_includemodel_title, ...
-				if(strpos($sqladd['select'], '*')===0){
-					$sqladd['select'] = substr($sqladd['select'], 1);
-					$sqladd['select'] = "{$model->_table}.*, {$relatedmodel->_table}.* " . $sqladd['select'];
-				}
-			}
-		} else {
-			$sqladd['filter'] = '';
-		}
+        #print_r($sqladd['where']);
+        if(isset($filter['where'])){
+          if($sqladd['where']==''){
+            $sqladd['where'] .= ' WHERE '.$filter['where'];
+          }else{
+            $sqladd['where'] .= ' AND '.$filter['where'].' ';
+          }
+          //merge the include param with the Where params, at the end
+          if(isset($filter['param'])){
+            if(isset($opt['param']) && isset($where_values))
+               $where_values = array_merge( $where_values, $filter['param']);
+            else if(isset($opt['param']))
+              $opt['param'] = array_merge( $opt['param'], $filter['param']);
+            else if(isset($where_values))
+              $where_values = array_merge( $where_values, $filter['param']);
+            else
+              $where_values = $filter['param'];
+          }
+        }
+        //edit the select part since now we do not want the filter table fields. Not needed if using include as its adjusted select already
+        //SELECT model.*, related_model.*, includemodel.id AS _t_includemodel_id, includemodel.title AS _t_includemodel_title, ...
+        if(strpos($sqladd['select'], '*')===0){
+          $sqladd['select'] = substr($sqladd['select'], 1);
+          $sqladd['select'] = "{$model->_table}.*, {$relatedmodel->_table}.* " . $sqladd['select'];
+        }
+      }
+    } else {
+      $sqladd['filter'] = '';
+    }
 
 
         //generate SQL based on $rtype (has_one, has_many, belongs_to)
@@ -1298,12 +1304,12 @@ class DooSqlMagic {
                 $sql = "SELECT {$sqladd['select']},  {$relatedmodel->_table}.{$rparams['foreign_key']} AS _{$relatedmodel->_table}__{$rparams['foreign_key']}
                     FROM {$model->_table}
                     {$sqladd['include']}
-					{$sqladd['filter']}
+          {$sqladd['filter']}
                     {$sqladd['joinType']} {$sqladd['rNestedQuery']} {$relatedmodel->_table}
                     ON {$model->_table}.{$mparams['foreign_key']} = {$relatedmodel->_table}.{$rparams['foreign_key']}
                     {$sqladd['where']}
-					{$sqladd['groupby']}
-					{$sqladd['having']}
+          {$sqladd['groupby']}
+          {$sqladd['having']}
                     {$sqladd['order']} {$sqladd['custom']} {$sqladd['limit']}";
                 break;
             case 'belongs_to':
@@ -1311,12 +1317,12 @@ class DooSqlMagic {
                 $sql = "SELECT {$sqladd['select']},  {$relatedmodel->_table}.{$rparams['foreign_key']} AS _{$relatedmodel->_table}__{$rparams['foreign_key']}
                     FROM {$model->_table}
                     {$sqladd['include']}
-					{$sqladd['filter']}
+          {$sqladd['filter']}
                     {$sqladd['joinType']} {$sqladd['rNestedQuery']} {$relatedmodel->_table}
                     ON {$model->_table}.{$mparams['foreign_key']} = {$relatedmodel->_table}.{$rparams['foreign_key']}
                     {$sqladd['where']}
-					{$sqladd['groupby']}
-					{$sqladd['having']}
+          {$sqladd['groupby']}
+          {$sqladd['having']}
                     {$sqladd['order']} {$sqladd['custom']} {$sqladd['limit']}";
                 break;
             case 'has_many':
@@ -1476,13 +1482,29 @@ class DooSqlMagic {
                         }
                         $limitModelStr = implode(',', $limitModelStr);
 
-                        if ($limitModelStr !== ''){
-                            if($sqladd['where']===''){
-                                $sqladd['where'] = "WHERE {$model->_table}.{$model->_primarykey} IN ($limitModelStr)";
-                            }else{
-                                $sqladd['where'] .= " AND {$model->_table}.{$model->_primarykey} IN ($limitModelStr)";
+
+                        if ($limitModelStr !== ''){ //tambahan   
+                            if ( ! $opt['endlimit']){   
+                                if ($sqladd['where'] === ''){
+                                    $sqladd['where'] = "WHERE {$model->_table}.{$model->_primarykey} IN ($limitModelStr)";
+                                }
+                                else{
+                                    $sqladd['where'] .= " AND {$model->_table}.{$model->_primarykey} IN ($limitModelStr)";
+                                }
+                                $sqladd['limit'] = "";
+                            }
+                            //tambahan
+                            else{
+                                $sqladd['limit'] = "LIMIT $limitstr";
                             }
                         }
+                        // if ($limitModelStr !== ''){
+                        //     if($sqladd['where']===''){
+                        //         $sqladd['where'] = "WHERE {$model->_table}.{$model->_primarykey} IN ($limitModelStr)";
+                        //     }else{
+                        //         $sqladd['where'] .= " AND {$model->_table}.{$model->_primarykey} IN ($limitModelStr)";
+                        //     }
+                        // }
                     }
 
 
@@ -1490,17 +1512,18 @@ class DooSqlMagic {
                         ,{$rparams['through']}.{$mparams['foreign_key']} AS _{$relatedmodel->_table}__{$rparams['foreign_key']}
                         ,{$rparams['through']}.{$rparams['foreign_key']} AS _{$model->_table}__{$mparams['foreign_key']}
                         FROM {$model->_table}
-						{$sqladd['include']}
-						{$sqladd['filter']}
+            {$sqladd['include']}
+            {$sqladd['filter']}
                         {$sqladd['joinType']} {$mparams['through']}
                         ON {$model->_table}.{$model->_primarykey} = {$mparams['through']}.{$rparams['foreign_key']}
                         {$sqladd['joinType']} {$relatedmodel->_table}
                         ON {$relatedmodel->_table}.{$relatedmodel->_primarykey} = {$rparams['through']}.{$mparams['foreign_key']}
                         {$sqladd['where']}
-						{$sqladd['groupby']}
+            {$sqladd['groupby']}
                         {$sqladd['having']}
                         ORDER BY {$addonOrder} {$rparams['through']}.{$mparams['foreign_key']},{$rparams['through']}.{$rparams['foreign_key']} ASC
-                         {$sqladd['custom']}";
+                         {$sqladd['custom']}
+                         {$sqladd['limit']}"; //tambahan
                 }
                 else if($mtype=='belongs_to'){
                     $sql = "SELECT {$sqladd['select']},
@@ -1508,11 +1531,11 @@ class DooSqlMagic {
                         {$relatedmodel->_table}.{$rparams['foreign_key']} AS _{$relatedmodel->_table}__{$rparams['foreign_key']}
                         FROM {$model->_table}
                         {$sqladd['include']}
-						{$sqladd['filter']}
+            {$sqladd['filter']}
                         {$sqladd['joinType']} {$sqladd['rNestedQuery']} {$relatedmodel->_table}
                         ON {$model->_table}.{$mparams['foreign_key']} = {$relatedmodel->_table}.{$rparams['foreign_key']}
                         {$sqladd['where']}
-						{$sqladd['groupby']}
+            {$sqladd['groupby']}
                         {$sqladd['having']}
                         {$sqladd['order']} {$sqladd['custom']} {$sqladd['limit']}";
                 }
@@ -1549,7 +1572,7 @@ class DooSqlMagic {
                 }
                 switch($rtype){
                     case 'has_one':
-					case 'belongs_to':
+          case 'belongs_to':
                         foreach($rs as $k=>$v){
                             if(isset($v[$retrieved_pk_key]))
                                 $fk = $v[$retrieved_pk_key];
@@ -1583,53 +1606,53 @@ class DooSqlMagic {
                                     if( strpos($k2, $tpart1)===0 ){
                                         $tmodel_var = str_replace($tpart1, '', $k2);
                                         $newtmodel->{$tmodel_var} = $v2;
-										continue;
+                    continue;
                                     }
                                 }
 
-								$gotoRelateSect = true;
+                $gotoRelateSect = true;
                                 $inAsSelect = preg_match('/[\s]+(as|AS|aS|As)[\s]+'. $k2 .',/', $oriSel.',');
 
-								if($inAsSelect || in_array($k2, $model_vars)){
-										if( !$inAsSelect && $oriSel[0]!=='*' &&
+                if($inAsSelect || in_array($k2, $model_vars)){
+                    if( !$inAsSelect && $oriSel[0]!=='*' &&
                                             !preg_match("/,(\s+)?({$model->_table}\.)?$k2(\s+)?,/", ','.$oriSel.',') &&
-											!preg_match('/,(\s+)?'.$model->_table .'\.\*/', ','. str_replace($model->_table .'.'. str_replace('_'.$model->_table.'__', '', $k2), $model->_table.'.*', $oriSel)) ){
+                      !preg_match('/,(\s+)?'.$model->_table .'\.\*/', ','. str_replace($model->_table .'.'. str_replace('_'.$model->_table.'__', '', $k2), $model->_table.'.*', $oriSel)) ){
 
-											$gotoRelateSect = true;
-										}else{
-											$gotoRelateSect = false;
-										}
+                      $gotoRelateSect = true;
+                    }else{
+                      $gotoRelateSect = false;
+                    }
 
-									if($gotoRelateSect===false){
-										if($k2===$retrieved_pk_key){
-											$record->{$mparams['foreign_key']} = $v2;
-										}else{
-											//if it's a repeated var which is rename earlier(alias _table__fieldname), replace the original var with its value
-											if(isset($alias_vars[$k2])){
-												$record->{$alias_vars[$k2]} = $v2;
-											}else{
-												$record->{$k2} = $v2;
-											}
-										}
-									}
+                  if($gotoRelateSect===false){
+                    if($k2===$retrieved_pk_key){
+                      $record->{$mparams['foreign_key']} = $v2;
+                    }else{
+                      //if it's a repeated var which is rename earlier(alias _table__fieldname), replace the original var with its value
+                      if(isset($alias_vars[$k2])){
+                        $record->{$alias_vars[$k2]} = $v2;
+                      }else{
+                        $record->{$k2} = $v2;
+                      }
+                    }
+                  }
                                 }
 
-								if($gotoRelateSect===true){
+                if($gotoRelateSect===true){
 
                                     if( isset($ralias_vars[$k2]) ){
                                         $k2 = $ralias_vars[$k2];
                                     }
 
                                     if($oriSel[0]!=='*'){
-                                        if(	in_array($k2, $rmodel_vars)===false &&
+                                        if( in_array($k2, $rmodel_vars)===false &&
                                             !preg_match('/,(\s+)?'.$relatedmodel->_table .'\.\*/', ','. str_replace($relatedmodel->_table .'.'. $k2, $relatedmodel->_table .'.*', $oriSel)) ){
                                             continue;
                                         } else if( !preg_match("/,(\s+)?({$relatedmodel->_table}\.)?($k2|\*)(\s+)?,/", ','.$oriSel.',') ){
                                             continue;
                                         }
-                                        else if( isset($alias_vars[$k2]) ){
-                                            continue;
-                                        }
+                                        // else if( isset($alias_vars[$k2]) ){
+                                        //     continue;
+                                        // }
                                     }
 
 
@@ -1643,7 +1666,7 @@ class DooSqlMagic {
                                                  #echo "<h1>{$ralias_vars[$k2]}</h1>";
                                                  $record->{$rmodel}->{$ralias_vars[$k2]} = $v2;
                                             }else{
-												 #echo "<h2>$rmodel $k2</h2>";
+                         #echo "<h2>$rmodel $k2</h2>";
                                                  $record->{$rmodel}->{$k2} = $v2;
                                             }
                                         }
@@ -1689,61 +1712,61 @@ class DooSqlMagic {
                                     $record = new $class_name;
                                     $record->{$rmodel} = ($rfk!=NULL)? array() : NULL;
 
-									if(isset($tmodel_class) && !isset($record->{$tmodel_class}) ){
-										if($tmodel_rtype=='has_many'){
-											#echo 'Has Many 3rd';
-											if(!isset($tmodelArray)){
-												$tmodelArray = array();
-												#echo '+++++ Create new 3rd Model Array';
-											}
-											$newtmodel = new $tmodel_class;
-										}else{
-											#echo 'Has One 3rd';
-											$newtmodel = new $tmodel_class;
-										}
-									}
+                  if(isset($tmodel_class) && !isset($record->{$tmodel_class}) ){
+                    if($tmodel_rtype=='has_many'){
+                      #echo 'Has Many 3rd';
+                      if(!isset($tmodelArray)){
+                        $tmodelArray = array();
+                        #echo '+++++ Create new 3rd Model Array';
+                      }
+                      $newtmodel = new $tmodel_class;
+                    }else{
+                      #echo 'Has One 3rd';
+                      $newtmodel = new $tmodel_class;
+                    }
+                  }
 
                                     foreach($v as $k2=>$v2){
 
-										//check and add to 3rd included Model
-										if(isset($newtmodel)){
-											//found then add to 3rd Model, create the Model object if not yet created
-											$tpart1 =  '_t_'.$tmodel->_table.'_';
-											if( strpos($k2, $tpart1)===0 ){
-												$tmodel_var = str_replace($tpart1, '', $k2);
-												$newtmodel->{$tmodel_var} = $v2;
-												continue;
-											}
-										}
+                    //check and add to 3rd included Model
+                    if(isset($newtmodel)){
+                      //found then add to 3rd Model, create the Model object if not yet created
+                      $tpart1 =  '_t_'.$tmodel->_table.'_';
+                      if( strpos($k2, $tpart1)===0 ){
+                        $tmodel_var = str_replace($tpart1, '', $k2);
+                        $newtmodel->{$tmodel_var} = $v2;
+                        continue;
+                      }
+                    }
 
-										$gotoRelateSect = true;
+                    $gotoRelateSect = true;
 
                                         $inAsSelect = preg_match('/[\s]+(as|AS|aS|As)[\s]+'. $k2 .',/', $oriSel.',');
 
                                         if($inAsSelect || in_array($k2, $model_vars)){
 
-											if( !$inAsSelect && $oriSel[0]!=='*' &&
+                      if( !$inAsSelect && $oriSel[0]!=='*' &&
                                                 !preg_match("/,(\s+)?({$model->_table}\.)?$k2(\s+)?,/", ','.$oriSel.',') &&
                                                 !preg_match('/,(\s+)?'.$model->_table .'\.\*/', ','. str_replace($model->_table .'.'. str_replace('_'.$model->_table.'__', '', $k2), $model->_table .'.*', $oriSel)) ){
 
                                                 $gotoRelateSect = true;
-											}else{
-												$gotoRelateSect = false;
-											}
+                      }else{
+                        $gotoRelateSect = false;
+                      }
 
 
-											if($gotoRelateSect===false){
-												if($k2===$retrieved_pk_key)
-													$record->{$mparams['foreign_key']} = $v2;
-												else{
-													//if it's a repeated var which is rename earlier(alias _table__fieldname), replace the original var with its value
-													if(isset($alias_vars[$k2])){
-														$record->{$alias_vars[$k2]} = $v2;
-													}else{
-														$record->{$k2} = $v2;
-													}
-												}
-											}
+                      if($gotoRelateSect===false){
+                        if($k2===$retrieved_pk_key)
+                          $record->{$mparams['foreign_key']} = $v2;
+                        else{
+                          //if it's a repeated var which is rename earlier(alias _table__fieldname), replace the original var with its value
+                          if(isset($alias_vars[$k2])){
+                            $record->{$alias_vars[$k2]} = $v2;
+                          }else{
+                            $record->{$k2} = $v2;
+                          }
+                        }
+                      }
                                         }
 
                                         if($gotoRelateSect===true){
@@ -1753,7 +1776,7 @@ class DooSqlMagic {
                                             }
 
                                             if($oriSel[0]!=='*'){
-                                                if(	in_array($k2, $rmodel_vars)===false &&
+                                                if( in_array($k2, $rmodel_vars)===false &&
                                                     !preg_match('/,(\s+)?'.$relatedmodel->_table .'\.\*/', ','. str_replace($relatedmodel->_table .'.'. $k2, $relatedmodel->_table .'.*', $oriSel)) ){
                                                         continue;
                                                 }
@@ -1779,16 +1802,16 @@ class DooSqlMagic {
                                         }
                                     }
 
-									//add in the 3rd Model to the 3rdModel key if created
-									if(isset($newtmodel)){
-										if($tmodel_rtype=='has_many'){
-											$tmodelArray[]= $newtmodel;
-											#echo '----Added 3rd Model<br/>';
-											$record->{$tmodel_class} = $tmodelArray;
-										}else{
-											$record->{$tmodel_class} = $newtmodel;
-										}
-									}
+                  //add in the 3rd Model to the 3rdModel key if created
+                  if(isset($newtmodel)){
+                    if($tmodel_rtype=='has_many'){
+                      $tmodelArray[]= $newtmodel;
+                      #echo '----Added 3rd Model<br/>';
+                      $record->{$tmodel_class} = $tmodelArray;
+                    }else{
+                      $record->{$tmodel_class} = $newtmodel;
+                    }
+                  }
 
                                     //do not add to the associated object Array if, relation not found, means empty Array, no record! if not it will create an Array with an empty Model Object
                                     if($rfk!=NULL)
@@ -1813,7 +1836,7 @@ class DooSqlMagic {
                                             }
 
                                             if($oriSel[0]!=='*'){
-                                                if(	in_array($k2, $rmodel_vars)===false &&
+                                                if( in_array($k2, $rmodel_vars)===false &&
                                                     !preg_match('/,(\s+)?'.$relatedmodel->_table .'\.\*/', ','. str_replace($relatedmodel->_table .'.'. $k2, $relatedmodel->_table .'.*', $oriSel)) ){
                                                     continue;
                                                 }
@@ -1828,10 +1851,10 @@ class DooSqlMagic {
                                                 else{
                                                     //if it's a repeated var which is rename earlier, replace it to its original var by spilting it _table__field '__'
                                                     if(isset($ralias_vars[$k2])){
-//														echo "<h3>$k2 = $v2</h3>";
+//                            echo "<h3>$k2 = $v2</h3>";
                                                         $assoc_model->{$ralias_vars[$k2]} = $v2;
                                                     }else{
-//														echo "<h3>$k2 = $v2</h3>";
+//                            echo "<h3>$k2 = $v2</h3>";
                                                         $assoc_model->{$k2} = $v2;
                                                     }
                                                 }
@@ -1879,76 +1902,81 @@ class DooSqlMagic {
      */
     public function relateMany($model, $rmodel, $opt=null){
         //---------------------Model has many other rmodels (has_many, has_one & belongs_to relationship only) ----------------
-		//add main model primary key to select list to link the related model results
+    //add main model primary key to select list to link the related model results
 
-		$modelObj = $model;
-		if (is_string($modelObj)) {
-			$this->loadModel($modelObj);
-			$modelObj = new $modelObj();
-		}
-		$mdl_pk = $modelObj->_primarykey;
+    $modelObj = $model;
+    if (is_string($modelObj)) {
+      $this->loadModel($modelObj);
+      $modelObj = new $modelObj();
+    }
+    $mdl_pk = $modelObj->_primarykey;
         $mdl_tbl = $modelObj->_table;
 
-		$rOpt = null;
-		if( isset($opt[$rmodel[0]]) ){
-			$rOpt = $opt[$rmodel[0]];
-			if(isset($rOpt['select'])){
-				$rOpt['select'] = "$mdl_tbl.$mdl_pk, " . $rOpt['select'];
-			}
-		}
-		$mainR = $this->relate($model, $rmodel[0], $rOpt);
+    // $rOpt = null;
+    // if( isset($opt[$rmodel[0]]) ){
+    //  $rOpt = $opt[$rmodel[0]];
+    //  if(isset($rOpt['select'])){
+    //    $rOpt['select'] = "$mdl_tbl.$mdl_pk, " . $rOpt['select'];
+    //  }
+    // }
+    // $mainR = $this->relate($model, $rmodel[0], $rOpt);
+
+        $classnm = get_class($model);
+
+        if ( isset($opt[$classnm]) )
+            $mainR = $this->find($model, $opt[$classnm]);
+        else
+            $mainR = $model->find();
 
         if($mainR===null)
             return;
 
-        $r=array();
-
         foreach($rmodel as $rm){
-			if($rm==$rmodel[0])
-				continue;
+      // if($rm==$rmodel[0])
+      //  continue;
 
-			$rOpt = (isset($opt[$rm])) ? $opt[$rm] : null;
-			if(isset($rOpt['select'])){
-				$rOpt['select'] = "$mdl_tbl.$mdl_pk, " . $rOpt['select'];
-			}else{
-				$this->loadModel($rm);
+      $rOpt = (isset($opt[$rm])) ? $opt[$rm] : null;
+      if(isset($rOpt['select'])){
+        $rOpt['select'] = "$mdl_tbl.$mdl_pk, " . $rOpt['select'];
+      }else{
+        $this->loadModel($rm);
                 $newrm = new $rm;
-				$rOpt['select'] = "$mdl_tbl.$mdl_pk, {$newrm->_table}.*";
-			}
-			$r[] = $this->relate($model, $rm, $rOpt);
-		}
+        $rOpt['select'] = "$mdl_tbl.$mdl_pk, {$newrm->_table}.*";
+      }
+      $r[] = $this->relate($model, $rm, $rOpt);
+    }
 
         $relatedClass = $rmodel;
 
         foreach($mainR as $k1=>$v1){
             foreach($r as $k2=>$v2){
-                $cls = $relatedClass[$k2+1];
-				foreach((array)$v2 as $k3=>$v3){
-					if( $v3->{$mdl_pk} == $v1->{$mdl_pk}){
-						$mainR[$k1]->{$cls} = $v3->{$cls};
-						break;
-					}
-				}
-				if (!isset($mainR[$k1]->{$cls})) {
-					if( is_string($model) ) {
-						$relationType = self::relationType($this->map, $model, $cls);
-					} else {
-						$relationType = self::relationType($this->map, get_class($model), $cls);
-					}
+                $cls = $relatedClass[$k2];
+        foreach((array)$v2 as $k3=>$v3){
+          if( $v3->{$mdl_pk} == $v1->{$mdl_pk}){
+            $mainR[$k1]->{$cls} = $v3->{$cls};
+            break;
+          }
+        }
+        if (!isset($mainR[$k1]->{$cls})) {
+          if( is_string($model) ) {
+            $relationType = self::relationType($this->map, $model, $cls);
+          } else {
+            $relationType = self::relationType($this->map, get_class($model), $cls);
+          }
 
-					$relationType = $relationType[0];
+          $relationType = $relationType[0];
 
-					if( $relationType == 'has_one' || $relationType == 'belongs_to' ) {
-						$mainR[$k1]->{$cls} = null;
-					} else {
-						$mainR[$k1]->{$cls} = array();
-					}
-				}
+          if( $relationType == 'has_one' || $relationType == 'belongs_to' ) {
+            $mainR[$k1]->{$cls} = null;
+          } else {
+            $mainR[$k1]->{$cls} = array();
+          }
+        }
             }
         }
 
         return $mainR;
-	}
+  }
 
 
     /**
@@ -2005,24 +2033,24 @@ class DooSqlMagic {
 
         $r = $this->relate($rm, $rm2, $rOpt);
 
-		if (!empty($r)) {
-			foreach($mainR as $k=>$v){
-				foreach($r as $k2=>$v2){
-					$rml = $v->{$rm};
-					if( is_array($rml) ){
-						foreach($rml as $k3=>$v3){
-							if($v3->{$v3->_primarykey} == $v2->{$v2->_primarykey}){
-								$mainR[$k]->{$rm}[$k3]->{$rm2} = $v2->{$rm2};
-							}
-						}
-					}else{
-						if($v->{$rm}->{$v2->_primarykey} == $v2->{$v2->_primarykey}){
-							$mainR[$k]->{$rm}->{$rm2} = $v2->{$rm2};
-						}
-					}
-				}
-			}
-		}
+    if (!empty($r)) {
+      foreach($mainR as $k=>$v){
+        foreach($r as $k2=>$v2){
+          $rml = $v->{$rm};
+          if( is_array($rml) ){
+            foreach($rml as $k3=>$v3){
+              if($v3->{$v3->_primarykey} == $v2->{$v2->_primarykey}){
+                $mainR[$k]->{$rm}[$k3]->{$rm2} = $v2->{$rm2};
+              }
+            }
+          }else{
+            if($v->{$rm}->{$v2->_primarykey} == $v2->{$v2->_primarykey}){
+              $mainR[$k]->{$rm}->{$rm2} = $v2->{$rm2};
+            }
+          }
+        }
+      }
+    }
 
         return $mainR;
     }
@@ -2140,145 +2168,145 @@ class DooSqlMagic {
      * @param array $rmodels A list of associated model objects to be insert along with the main model.
      * @return int The inserted record's Id
      */
-	public function relatedInsert(&$model, &$rmodels, $updateRelated = true) {
+  public function relatedInsert(&$model, &$rmodels, $updateRelated = true) {
 
-		//insert the main model first and save its id
-		$main_id = $this->insert($model);
-		$model->{$model->_primarykey} = $main_id;	   //for later use in many-to-many relationship, need the primary key
-		$mId = $model->{$model->_primarykey};
+    //insert the main model first and save its id
+    $main_id = $this->insert($model);
+    $model->{$model->_primarykey} = $main_id;    //for later use in many-to-many relationship, need the primary key
+    $mId = $model->{$model->_primarykey};
 
-		//loop and get their relationship, set the foreign key to $main_id
-		foreach ($rmodels as $i => $rmodel) {
-			$class_name = get_class($model);
-			$rclass_name = get_class($rmodel);
+    //loop and get their relationship, set the foreign key to $main_id
+    foreach ($rmodels as $i => $rmodel) {
+      $class_name = get_class($model);
+      $rclass_name = get_class($rmodel);
 
 //            if (!isset($model->{$rclass_name}))
 //                $model->{$rclass_name} = array();
-			//get how the related model relates to the main model object
-			list($rtype, $rparams) = self::relationType($this->map, $rclass_name, $class_name);
-			if ($rtype == NULL)
-				throw new SqlMagicException("Model $class_name does not relate to $rclass_name", SqlMagicException::RelationNotFound);
-			#print_r(array($rtype,$rparams));
+      //get how the related model relates to the main model object
+      list($rtype, $rparams) = self::relationType($this->map, $rclass_name, $class_name);
+      if ($rtype == NULL)
+        throw new SqlMagicException("Model $class_name does not relate to $rclass_name", SqlMagicException::RelationNotFound);
+      #print_r(array($rtype,$rparams));
 
-			$chk_rmodel = $this->find($rclass_name, array('select' => $rmodel->_primarykey, 'limit' => 1, 'where' => $rmodel->_primarykey . " = ?", 'param' => array($rmodel->{$rmodel->_primarykey})));
+      $chk_rmodel = $this->find($rclass_name, array('select' => $rmodel->_primarykey, 'limit' => 1, 'where' => $rmodel->_primarykey . " = ?", 'param' => array($rmodel->{$rmodel->_primarykey})));
 
-			if ($rtype == 'has_many' && isset($rparams['foreign_key']) && isset($rparams['through'])) {
-				//echo '<h2>Insert MAny to many</h2>';
-				//select only the primary key (id) and the set properties
-//				$obj = get_object_vars($rmodel);
-//				$fieldstr ='';
-//				foreach($obj as $o=>$v){
-//					if(isset($v) && in_array($o, $model->_fields)){
-//						$fieldstr .= ','.$o;
-//					}
-//				}
-//				$fieldstr = "{$rmodel->_primarykey}$fieldstr";
-				//get the linked key(Model's foreign key) for the $model from the relationship defined. It's not always primary key of the Model
-				$reversed_relation = self::relationType($this->map, $class_name, $rclass_name);
-				$model_linked_key = $reversed_relation[1]['foreign_key'];
-				//$mId = $model->{$rparams['foreign_key']};
-				//check if the related model already exist it true than insert to the 'through' table with the 2 ids.
-				//$chk_rmodel = $this->find($rmodel, array('select'=>$fieldstr, 'limit'=>1));
-				if ($chk_rmodel != NULL) {
-					//echo '<h1>'.$chk_rmodel->{$rparams['foreign_key']}.'</h1>';
-					if ($updateRelated)
-						$this->update($rmodel);
-					$rId = $chk_rmodel->{$chk_rmodel->_primarykey};
-				}else {
-					//echo '<h2>Not found this related model in many-to-many. Insert it!</h2>';
-					$rId = $this->insert($rmodel);
-					$rmodel->{$rmodel->_primarykey} = $rId;
-					$rmodels[$i] = $rmodel;
-				}
+      if ($rtype == 'has_many' && isset($rparams['foreign_key']) && isset($rparams['through'])) {
+        //echo '<h2>Insert MAny to many</h2>';
+        //select only the primary key (id) and the set properties
+//        $obj = get_object_vars($rmodel);
+//        $fieldstr ='';
+//        foreach($obj as $o=>$v){
+//          if(isset($v) && in_array($o, $model->_fields)){
+//            $fieldstr .= ','.$o;
+//          }
+//        }
+//        $fieldstr = "{$rmodel->_primarykey}$fieldstr";
+        //get the linked key(Model's foreign key) for the $model from the relationship defined. It's not always primary key of the Model
+        $reversed_relation = self::relationType($this->map, $class_name, $rclass_name);
+        $model_linked_key = $reversed_relation[1]['foreign_key'];
+        //$mId = $model->{$rparams['foreign_key']};
+        //check if the related model already exist it true than insert to the 'through' table with the 2 ids.
+        //$chk_rmodel = $this->find($rmodel, array('select'=>$fieldstr, 'limit'=>1));
+        if ($chk_rmodel != NULL) {
+          //echo '<h1>'.$chk_rmodel->{$rparams['foreign_key']}.'</h1>';
+          if ($updateRelated)
+            $this->update($rmodel);
+          $rId = $chk_rmodel->{$chk_rmodel->_primarykey};
+        }else {
+          //echo '<h2>Not found this related model in many-to-many. Insert it!</h2>';
+          $rId = $this->insert($rmodel);
+          $rmodel->{$rmodel->_primarykey} = $rId;
+          $rmodels[$i] = $rmodel;
+        }
 
-				//insert into the 'through' Table, faster with parameterized prepared statements
-				$this->query("INSERT INTO {$rparams['through']} ({$model_linked_key},{$rparams['foreign_key']})  VALUES (?,?)", array($mId, $rId));
-			} else if (isset($rparams['foreign_key'])) {
-				list($rtype, $rparams) = self::relationType($this->map, $class_name, $rclass_name);
-				$rmodel->{$rparams['foreign_key']} = $main_id;
-				if ($chk_rmodel != NULL) {
-					if ($updateRelated)
-						$this->update($rmodel);
-				} else {
-					$rId = $this->insert($rmodel);
-					$rmodel->{$rmodel->_primarykey} = $rId;
-					$rmodels[$i] = $rmodel;
-				}
-			}
-			$rmodels[$i] = $rmodel;
-			//$model->{$rclass_name}[] = $rmodel;
-		}
+        //insert into the 'through' Table, faster with parameterized prepared statements
+        $this->query("INSERT INTO {$rparams['through']} ({$model_linked_key},{$rparams['foreign_key']})  VALUES (?,?)", array($mId, $rId));
+      } else if (isset($rparams['foreign_key'])) {
+        list($rtype, $rparams) = self::relationType($this->map, $class_name, $rclass_name);
+        $rmodel->{$rparams['foreign_key']} = $main_id;
+        if ($chk_rmodel != NULL) {
+          if ($updateRelated)
+            $this->update($rmodel);
+        } else {
+          $rId = $this->insert($rmodel);
+          $rmodel->{$rmodel->_primarykey} = $rId;
+          $rmodels[$i] = $rmodel;
+        }
+      }
+      $rmodels[$i] = $rmodel;
+      //$model->{$rclass_name}[] = $rmodel;
+    }
 
-		return $main_id;
-	}
+    return $main_id;
+  }
 
-	/**
-	 * Update an existing record. (Prepares and execute the UPDATE statements)
-	 * If you want to set null values during the update use the setnulls option
-	 * @param mixed $model The model object to be updated.
-	 * @param array $opt Associative array of options to generate the UPDATE statement. Supported: <i>where, limit, field, param, setnulls</i
-	 * @return int Number of rows affected
-	 */
-	public function update($model, $opt=NULL) {
-		//add values to fields where the model propertie(s) are/is set
-		$obj = get_object_vars($model);
+  /**
+   * Update an existing record. (Prepares and execute the UPDATE statements)
+   * If you want to set null values during the update use the setnulls option
+   * @param mixed $model The model object to be updated.
+   * @param array $opt Associative array of options to generate the UPDATE statement. Supported: <i>where, limit, field, param, setnulls</i
+   * @return int Number of rows affected
+   */
+  public function update($model, $opt=NULL) {
+    //add values to fields where the model propertie(s) are/is set
+    $obj = get_object_vars($model);
 
-		$values = array();
-		$field_and_value = '';
+    $values = array();
+    $field_and_value = '';
 
-		$opt['setnulls'] = isset($opt['setnulls']) ? $opt['setnulls'] : false;
+    $opt['setnulls'] = isset($opt['setnulls']) ? $opt['setnulls'] : false;
 
-		if (isset($opt['field'])) {
-			$opt['field'] = explode(',', str_replace(' ', '', $opt['field']));
-			foreach ($obj as $o => $v) {
-				if (in_array($o, $opt['field'])) {
-					if (($opt['setnulls'] === true || isset($v)) && in_array($o, $model->_fields)) {
-						if (is_object($v)) {
-							$field_and_value .= "$o=$v,";
-						} elseif ($v === null) {
-							$field_and_value .= "$o=null,";
-						} else {
-							$values[] = $v;
-							$field_and_value .= $o . '=?,';
-						}
-					}
-				}
-			}
-		} else {
-			foreach ($obj as $o => $v) {
-				if (($opt['setnulls'] === true || isset($v)) && in_array($o, $model->_fields)) {
-					if (is_object($v)) {
-						$field_and_value .= "$o=$v,";
-					} elseif ($v === null) {
-						$field_and_value .= "$o=null,";
-					} else {
-						$values[] = $v;
-						$field_and_value .= $o . '=?,';
-					}
-				}
-			}
-		}
+    if (isset($opt['field'])) {
+      $opt['field'] = explode(',', str_replace(' ', '', $opt['field']));
+      foreach ($obj as $o => $v) {
+        if (in_array($o, $opt['field'])) {
+          if (($opt['setnulls'] === true || isset($v)) && in_array($o, $model->_fields)) {
+            if (is_object($v)) {
+              $field_and_value .= "$o=$v,";
+            } elseif ($v === null) {
+              $field_and_value .= "$o=null,";
+            } else {
+              $values[] = $v;
+              $field_and_value .= $o . '=?,';
+            }
+          }
+        }
+      }
+    } else {
+      foreach ($obj as $o => $v) {
+        if (($opt['setnulls'] === true || isset($v)) && in_array($o, $model->_fields)) {
+          if (is_object($v)) {
+            $field_and_value .= "$o=$v,";
+          } elseif ($v === null) {
+            $field_and_value .= "$o=null,";
+          } else {
+            $values[] = $v;
+            $field_and_value .= $o . '=?,';
+          }
+        }
+      }
+    }
 
-		$field_and_value = substr($field_and_value, 0, strlen($field_and_value) - 1);
+    $field_and_value = substr($field_and_value, 0, strlen($field_and_value) - 1);
 
-		if (isset($model->{$obj['_primarykey']})) {
-			$where = $obj['_primarykey'] . '=?';
-			$values[] = $model->{$obj['_primarykey']};
-			$sql = "UPDATE {$obj['_table']} SET {$field_and_value} WHERE {$where}";
-		} else {
-			$where = $opt['where'];
-			if (isset($opt['param']))
-				$values = array_merge($values, $opt['param']);
+    if (isset($model->{$obj['_primarykey']})) {
+      $where = $obj['_primarykey'] . '=?';
+      $values[] = $model->{$obj['_primarykey']};
+      $sql = "UPDATE {$obj['_table']} SET {$field_and_value} WHERE {$where}";
+    } else {
+      $where = $opt['where'];
+      if (isset($opt['param']))
+        $values = array_merge($values, $opt['param']);
 
-			if (isset($opt['limit'])) {
-				$sql = "UPDATE {$obj['_table']} SET {$field_and_value} WHERE {$where} LIMIT {$opt['limit']}";
-			} else {
-				$sql = "UPDATE {$obj['_table']} SET {$field_and_value} WHERE {$where}";
-			}
-		}
+      if (isset($opt['limit'])) {
+        $sql = "UPDATE {$obj['_table']} SET {$field_and_value} WHERE {$where} LIMIT {$opt['limit']}";
+      } else {
+        $sql = "UPDATE {$obj['_table']} SET {$field_and_value} WHERE {$where}";
+      }
+    }
 
-		return $this->query($sql, $values)->rowCount();
-	}
+    return $this->query($sql, $values)->rowCount();
+  }
 
     /**
      * Use updateAttributes() instead
@@ -2362,96 +2390,96 @@ class DooSqlMagic {
      * @param array $opt Assoc array of options to update the main model. Supported: <i>where, limit, field, param</i>
      */
     public function relatedUpdate(&$model, &$rmodels, $opt=NULL, $updateRelated = true) {
-		$rIdsToNotDelete = array();
-		$this->update($model, $opt);
-		$mId = $model->{$model->_primarykey};
-		foreach ($rmodels as $i => $rmodel) {
-			#echo $rmodel->{$rmodel->_primarykey} . '<br>';
-			$class_name = get_class($model);
-			$rclass_name = get_class($rmodel);
+    $rIdsToNotDelete = array();
+    $this->update($model, $opt);
+    $mId = $model->{$model->_primarykey};
+    foreach ($rmodels as $i => $rmodel) {
+      #echo $rmodel->{$rmodel->_primarykey} . '<br>';
+      $class_name = get_class($model);
+      $rclass_name = get_class($rmodel);
 
-//			if (isset($model->{$rclass_name}))
-//				$model->{$rclass_name} = array();
+//      if (isset($model->{$rclass_name}))
+//        $model->{$rclass_name} = array();
 
-			//get how the related model relates to the main model object
-			list($rtype, $rparams) = self::relationType($this->map, $rclass_name, $class_name);
-			if ($rtype == NULL)
-				throw new SqlMagicException("Model $class_name does not relate to $rclass_name", SqlMagicException::RelationNotFound);
-			//print_r(array($rtype,$rparams));
+      //get how the related model relates to the main model object
+      list($rtype, $rparams) = self::relationType($this->map, $rclass_name, $class_name);
+      if ($rtype == NULL)
+        throw new SqlMagicException("Model $class_name does not relate to $rclass_name", SqlMagicException::RelationNotFound);
+      //print_r(array($rtype,$rparams));
 
-			$chk_rmodel = $this->find($rclass_name, array('select' => $rmodel->_primarykey, 'limit' => 1, 'where' => $rmodel->_primarykey . " = ?", 'param' => array($rmodel->{$rmodel->_primarykey})));
+      $chk_rmodel = $this->find($rclass_name, array('select' => $rmodel->_primarykey, 'limit' => 1, 'where' => $rmodel->_primarykey . " = ?", 'param' => array($rmodel->{$rmodel->_primarykey})));
 
-			if ($rtype == 'has_many' && isset($rparams['foreign_key']) && isset($rparams['through'])) {
-				//echo '<h2>Insert MAny to many</h2>';
-				//select only the primary key (id) and the set properties
-//				$obj = get_object_vars($rmodel);
-//				$fieldstr ='';
-//				foreach($obj as $o=>$v){
-//					if(isset($v) && in_array($o, $model->_fields)){
-//						$fieldstr .= ','.$o;
-//					}
-//				}
-//				$fieldstr = "{$rmodel->_primarykey}$fieldstr";
-				//get the linked key(Model's foreign key) for the $model from the relationship defined. It's not always primary key of the Model
-				$reversed_relation = self::relationType($this->map, $class_name, $rclass_name);
-				$model_linked_key = $reversed_relation[1]['foreign_key'];
-				//$mId = $model->{$rparams['foreign_key']};
-				//check if the related model already exist it true than insert to the 'through' table with the 2 ids.
-				//$chk_rmodel = $this->find($rmodel, array('select'=>$fieldstr, 'limit'=>1));
-				if ($chk_rmodel != NULL) {
-					//echo '<h1>'.$chk_rmodel->{$rparams['foreign_key']}.'</h1>';
-					if ($updateRelated) //if (isset($opt["updateRelated"]) && $opt["updateRelated"] == true)
-						$this->update($rmodel); // if model exists, we update it
-					$rId = $chk_rmodel->{$chk_rmodel->_primarykey};
-				}else {
-					//echo '<h2>Not found this related model in many-to-many. Insert it!</h2>';
-					$rId = $this->insert($rmodel); // if doesn't exist, we insert it
-					$rmodel->{$rmodel->_primarykey} = $rId; // assign the new id to the inserted model
-					$rmodels[$i] = $rmodel;
-				}
-				$rIdsToNotDelete[] = $rmodel->{$rmodel->_primarykey};
-				//insert into the 'through' Table, if exists dun create duplicates
-				if ($this->query("SELECT {$rparams['foreign_key']},{$model_linked_key} FROM {$rparams['through']} WHERE {$rparams['foreign_key']}=? AND {$model_linked_key}=?", array($rId, $mId))->fetch() == NULL) {
-					$this->query("INSERT INTO {$rparams['through']} ({$model_linked_key},{$rparams['foreign_key']}) VALUES (?,?)", array($mId, $rId));
-				}
-			} else if (isset($rparams['foreign_key'])) {
-				//echo '<h2>Insert 1to1 or 1tomany</h2>';
-				list($rtype, $rparams) = self::relationType($this->map, $class_name, $rclass_name);
-				$rmodel->{$rparams['foreign_key']} = $model->{$model->_primarykey};
-				if ($chk_rmodel != NULL) {
-					if ($updateRelated)
-						$this->update($rmodel);
-				} else {
-					$rId = $this->insert($rmodel);
-					$rmodel->{$rmodel->_primarykey} = $rId; // assign the new id to the inserted model
-				}
-				$rIdsToNotDelete[] = $rmodel->{$rmodel->_primarykey};
-			}
-			$rmodels[$i] = $rmodel;
-			//$model->{$rclass_name}[] = $rmodel;
-		}
-		if ($updateRelated && count($rIdsToNotDelete) > 0) { // if (isset($opt["deleteNotRelated"]) && $opt["deleteNotRelated"] == true && count($rIdsToNotDelete) > 0) {
-			if ($rtype == 'has_many' && isset($rparams['foreign_key']) && isset($rparams['through'])) { // delete into the 'through' Table if needed
-				$this->query("DELETE FROM {$rparams['through']} WHERE {$rparams['foreign_key']} NOT IN (" . implode(',', $rIdsToNotDelete) . ") AND {$model_linked_key}=?", array($mId));
-			} else if (isset($rparams['foreign_key']) && count($rIdsToNotDelete) > 0) {
-				$this->query("DELETE FROM {$rmodel->_table} WHERE {$rmodel->_primarykey} NOT IN (" . implode(',', $rIdsToNotDelete) . ") AND {$rparams['foreign_key']}=?", array($mId));
-			}
-		}
-	}
+      if ($rtype == 'has_many' && isset($rparams['foreign_key']) && isset($rparams['through'])) {
+        //echo '<h2>Insert MAny to many</h2>';
+        //select only the primary key (id) and the set properties
+//        $obj = get_object_vars($rmodel);
+//        $fieldstr ='';
+//        foreach($obj as $o=>$v){
+//          if(isset($v) && in_array($o, $model->_fields)){
+//            $fieldstr .= ','.$o;
+//          }
+//        }
+//        $fieldstr = "{$rmodel->_primarykey}$fieldstr";
+        //get the linked key(Model's foreign key) for the $model from the relationship defined. It's not always primary key of the Model
+        $reversed_relation = self::relationType($this->map, $class_name, $rclass_name);
+        $model_linked_key = $reversed_relation[1]['foreign_key'];
+        //$mId = $model->{$rparams['foreign_key']};
+        //check if the related model already exist it true than insert to the 'through' table with the 2 ids.
+        //$chk_rmodel = $this->find($rmodel, array('select'=>$fieldstr, 'limit'=>1));
+        if ($chk_rmodel != NULL) {
+          //echo '<h1>'.$chk_rmodel->{$rparams['foreign_key']}.'</h1>';
+          if ($updateRelated) //if (isset($opt["updateRelated"]) && $opt["updateRelated"] == true)
+            $this->update($rmodel); // if model exists, we update it
+          $rId = $chk_rmodel->{$chk_rmodel->_primarykey};
+        }else {
+          //echo '<h2>Not found this related model in many-to-many. Insert it!</h2>';
+          $rId = $this->insert($rmodel); // if doesn't exist, we insert it
+          $rmodel->{$rmodel->_primarykey} = $rId; // assign the new id to the inserted model
+          $rmodels[$i] = $rmodel;
+        }
+        $rIdsToNotDelete[] = $rmodel->{$rmodel->_primarykey};
+        //insert into the 'through' Table, if exists dun create duplicates
+        if ($this->query("SELECT {$rparams['foreign_key']},{$model_linked_key} FROM {$rparams['through']} WHERE {$rparams['foreign_key']}=? AND {$model_linked_key}=?", array($rId, $mId))->fetch() == NULL) {
+          $this->query("INSERT INTO {$rparams['through']} ({$model_linked_key},{$rparams['foreign_key']}) VALUES (?,?)", array($mId, $rId));
+        }
+      } else if (isset($rparams['foreign_key'])) {
+        //echo '<h2>Insert 1to1 or 1tomany</h2>';
+        list($rtype, $rparams) = self::relationType($this->map, $class_name, $rclass_name);
+        $rmodel->{$rparams['foreign_key']} = $model->{$model->_primarykey};
+        if ($chk_rmodel != NULL) {
+          if ($updateRelated)
+            $this->update($rmodel);
+        } else {
+          $rId = $this->insert($rmodel);
+          $rmodel->{$rmodel->_primarykey} = $rId; // assign the new id to the inserted model
+        }
+        $rIdsToNotDelete[] = $rmodel->{$rmodel->_primarykey};
+      }
+      $rmodels[$i] = $rmodel;
+      //$model->{$rclass_name}[] = $rmodel;
+    }
+    if ($updateRelated && count($rIdsToNotDelete) > 0) { // if (isset($opt["deleteNotRelated"]) && $opt["deleteNotRelated"] == true && count($rIdsToNotDelete) > 0) {
+      if ($rtype == 'has_many' && isset($rparams['foreign_key']) && isset($rparams['through'])) { // delete into the 'through' Table if needed
+        $this->query("DELETE FROM {$rparams['through']} WHERE {$rparams['foreign_key']} NOT IN (" . implode(',', $rIdsToNotDelete) . ") AND {$model_linked_key}=?", array($mId));
+      } else if (isset($rparams['foreign_key']) && count($rIdsToNotDelete) > 0) {
+        $this->query("DELETE FROM {$rmodel->_table} WHERE {$rmodel->_primarykey} NOT IN (" . implode(',', $rIdsToNotDelete) . ") AND {$rparams['foreign_key']}=?", array($mId));
+      }
+    }
+  }
 
-	/**
-	 * Delete all records from table (Prepares and executes the DELETE statement)
-	 * @param mixed $model The model object from which to delete all records
-	 */
-	public function deleteAll($model) {
-		if (!is_object($model)) {
-			$this->loadModel($model);
-			$model = new $model;
-		}
+  /**
+   * Delete all records from table (Prepares and executes the DELETE statement)
+   * @param mixed $model The model object from which to delete all records
+   */
+  public function deleteAll($model) {
+    if (!is_object($model)) {
+      $this->loadModel($model);
+      $model = new $model;
+    }
 
-		$sql = "DELETE FROM {$model->_table}";
-		$rs = $this->query($sql);
-	}
+    $sql = "DELETE FROM {$model->_table}";
+    $rs = $this->query($sql);
+  }
 
     /**
      * Delete an existing record. (Prepares and execute the DELETE statements)
@@ -2511,9 +2539,9 @@ class DooSqlMagic {
      * @return array Relationship with details such as relationship type, foreign key, linked table
      */
     public static function relationType($map, $model_name, $relate_model_name){
-		if (!isset($map[$model_name])) {
-			throw new SqlMagicException("No relationship mapping found between '{$model_name}' and '{$relate_model_name}'");
-		}
+    if (!isset($map[$model_name])) {
+      throw new SqlMagicException("No relationship mapping found between '{$model_name}' and '{$relate_model_name}'");
+    }
         $r1 = $map[$model_name];
         #print_r($r1);
         $rtype = NULL;

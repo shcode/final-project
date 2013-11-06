@@ -15,11 +15,18 @@ class ListingController extends BaseController {
 		$listing = new Listing();
 		$listing->user_id = $this->session->user->user_id;
 
-		$total = $listing->count();
-		$pager = new DooPager(Doo::conf()->APP_URL.'listing', $total, 2, 5);
+        $opt = array();
+
+        if (isset($_GET['field']) && isset($_GET['key']))
+        {
+            $opt['where'] = $_GET['field'] . " LIKE '%" . $_GET['key'] . "%'";
+        }
+
+        $total = $listing->count($opt);
+		$pager = new DooPager(Doo::conf()->APP_URL.'listing', $total, 3, 10);
 
 		$pager->prevText = 'Prev';
-		$pager->nextText = 'Next';		
+		$pager->nextText = 'Next';
 
         if ($total > 0)
         {
@@ -28,37 +35,54 @@ class ListingController extends BaseController {
             else
                 $pager->paginate(1);
 
-			$this->data['listing'] = $listing->relateMany(array("Image", "Area"), array(
-				"Image" => array('limit' => $pager->limit),
+
+            $opt['limit'] = $pager->limit;
+			$this->data['listing'] = $listing->relateMany(array("Image", "Area", "Bid"), array(
+                "Listing" => $opt,
+                "Bid" => array("desc" => "created_at")
 			));	
         }
-        // echo "<pre>";
-        // print_r($this->data['listing']);
-        // echo "</pre>";
 
 		$this->data['pager'] = $pager->output;  
-
 		
 		$this->data['content'] = 'listing/index';
         $this->data['title'] = "Daftar Properti Anda";
         $this->render('front/template', $this->data);    		
 	}
 
-	function view_properti() {
+	function view_listing() {
 		$id = $this->params['id'];
+
+        $listing = new Listing();
+        $listing->listing_id = $id;
+
+        $listing = $listing->relateMany(array("Image", "Area", "User", "Bid"), 
+                array("Bid" => array("desc" => "created_at"))
+            );
+
+        if(count($listing) > 0)
+        {
+            $this->data['listing'] = $listing[0];
+
+            $listing[0]->view_count =  $listing[0]->view_count + 1;
+            $listing[0]->update();
+
+            if($listing[0]->user_id == $this->session->user->user_id)
+                $this->data['editable'] = true;
+        }
+
+        $this->data['content'] = 'listing/view';
+        $this->data['title'] = $listing[0]->title;
+        $this->render('front/template', $this->data);   
 	}
 
-	function edit_properti() {
+	function edit1() {
 		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
 	}
 
-	function view_bid() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
-	}
-
-	function cancel_bid() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
-	}	
+    function edit2() {
+        echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+    }    
 
 	function add() {
 
@@ -102,6 +126,8 @@ class ListingController extends BaseController {
             			$error['start_date1'] = "- Waktu Mulai belum diisi.";
             		if($_POST['end_date1'] == "" || $_POST['end_date2'] == "")
             			$error['end_date1'] = "- Waktu Berakhir belum diisi.";
+
+                    $_POST['price'] = $_POST['start_price'];
             		break;
             }
 
@@ -150,17 +176,24 @@ class ListingController extends BaseController {
             }
             else
             {
+                Doo::loadCore('db/DooDbExpression');
             	$step1 = $this->session->listing;
-	            $start_date = $step1['start_date1'] . " " . $step1['start_date2'];
-	            $end_date = $step1['end_date1'] . " " . $step1['end_date2'];            	
+	            $start_date = $step1['start_date1'] . " " . trim($step1['start_date2']) . ":00";
+	            $end_date = $step1['end_date1'] . " " . trim($step1['end_date2']) . ":00";            	
             	$data = array_merge($step1, $_POST);
 
             	$listing = new Listing($data);
             	$listing->user_id = $this->session->user->user_id;
+                $listing->start_date = $start_date;
+                $listing->end_date = $end_date;
                 $area = new Area();
                 $area = $area->getByProvinceId_DistrictId_SubdistrictId_first($_POST['province_id'], $_POST['district_id'], $_POST['subdistrict_id']);
 
                 $listing->area_id = $area->area_id;
+                $now = new DooDbExpression('NOW()');
+                $listing->created_at = $now;
+
+                $this->printr($listing);
 
             	$listing = $listing->insert();
 
@@ -177,12 +210,19 @@ class ListingController extends BaseController {
             	}
 
                 $this->addMessage("success");
-                $this->addMessage("ID Listing = " . $listing);
+                // $this->addMessage("Listing berhasil dimasukkan dengan ID = " . $listing);
 
-                var_dump($listing);
-                unset($this->session->listing);         	
+                // $log = new Log();
+                // $log->user_id = $this->session->user->user_id;
+                // $log->logs = "[user@" . $this->session->user->user_id . "] telah membuat Listing Baru dengan ID [listing@" . $listing . "]";
+                // $log->log_info = "Buat Listing Baru";
+                // $log->created_at = $now;
 
-            	DooUriRouter::redirect(Doo::conf()->APP_URL . "landingpage");	
+                // $log->insert();
+
+                //unset($this->session->listing);         	
+
+            	//DooUriRouter::redirect(Doo::conf()->APP_URL . "landingpage");	
             }
 		}
 
@@ -199,10 +239,191 @@ class ListingController extends BaseController {
         $this->data['fancybox'] = true;
 		$this->data['content'] = 'listing/step2';
         $this->data['title'] = "Tambah Listing [Step 2]";
-        $this->render('front/template', $this->data);         
-
-		var_dump($this->session->listing);
+        $this->render('front/template', $this->data);
 	}
+
+    function auction() {
+        Doo::loadModel("Type");
+
+        $listing = new Listing();
+
+        $opt_terbaru = array(
+                "limit" => 8,
+                "desc" => "created_at",
+                "where" => "listing_type=?",
+                "param" => array("Lelang")
+                );
+        $opt_populer = array(
+                "limit" => 8,
+                "desc" => "view_count",
+                "where" => "listing_type=?",
+                "param" => array("Lelang")              
+                );
+
+
+        if (isset($_GET['tipe']) && ($_GET['tipe'] > 0) && ($_GET['tipe'] < 10))
+        {
+            $opt_populer['where'] = $opt_terbaru['where'] = "type_id=? AND listing_type=?";
+            $opt_populer['param'] = $opt_terbaru['param'] = array($_GET['tipe'], "Lelang");
+
+
+            $type = new Type();
+            $type->type_id = $_GET['tipe'];
+            $type->limit = "first";
+
+            $this->data['type_listing'] = $type->find();
+        }
+
+        $this->data['terbaru'] = $listing->relateMany(array("Image", "Area"), array(
+            "Listing" => $opt_terbaru
+        )); 
+
+        $this->data['populer'] = $listing->relateMany(array("Image", "Area"), array(
+            "Listing" => $opt_populer
+        ));     
+
+        $this->data['tipe'] = Doo::db()->find("Type");
+        $this->data['nav'] = "lelang";
+
+        $this->data['content'] = 'home/index';
+        $this->data['title'] = "Home";
+        $this->render('front/template', $this->data, true);        
+    }
+
+    function pop_auction()
+    {
+        Doo::loadModel("Type");
+
+        $listing = new Listing();
+
+        $opt = array(
+                "desc" => "view_count",
+                "where" => "listing_type=?",
+                "param" => array("Lelang")              
+                );
+
+
+        if (isset($_GET['tipe']) && ($_GET['tipe'] > 0) && ($_GET['tipe'] < 10))
+        {
+            $opt['where'] = "type_id=? AND listing_type=?";
+            $opt['param'] = array($_GET['tipe'], "Lelang");
+
+
+            $type = new Type();
+            $type->type_id = $_GET['tipe'];
+            $type->limit = "first";
+
+            $this->data['type_listing'] = $type->find();
+        }
+
+        $this->data['listing'] = $listing->relateMany(array("Image", "Area"), array(
+            "Listing" => $opt
+        ));     
+
+        $this->data['tipe'] = Doo::db()->find("Type");
+        $this->data['nav'] = "lelang";
+
+        $this->data['content'] = 'home/index';
+        $this->data['title'] = "Home";
+        $this->render('front/template', $this->data, true);        
+    }
+
+    function rent() {
+        Doo::loadModel("Type");
+
+        $listing = new Listing();
+
+        $opt_terbaru = array(
+                "limit" => 8,
+                "desc" => "created_at",
+                "where" => "listing_type=?",
+                "param" => array("Sewa")
+                );
+        $opt_populer = array(
+                "limit" => 8,
+                "desc" => "view_count",
+                "where" => "listing_type=?",
+                "param" => array("Sewa")                
+                );
+
+
+        if (isset($_GET['tipe']) && ($_GET['tipe'] > 0) && ($_GET['tipe'] < 10))
+        {
+            $opt_populer['where'] = $opt_terbaru['where'] = "type_id=? AND listing_type=?";
+            $opt_populer['param'] = $opt_terbaru['param'] = array($_GET['tipe'], "Sewa");
+
+
+            $type = new Type();
+            $type->type_id = $_GET['tipe'];
+            $type->limit = "first";
+
+            $this->data['type_listing'] = $type->find();
+        }
+
+        $this->data['terbaru'] = $listing->relateMany(array("Image", "Area"), array(
+            "Listing" => $opt_terbaru
+        )); 
+
+        $this->data['populer'] = $listing->relateMany(array("Image", "Area"), array(
+            "Listing" => $opt_populer
+        ));     
+
+        $this->data['tipe'] = Doo::db()->find("Type");
+        $this->data['nav'] = "sewa";
+
+        $this->data['content'] = 'home/index';
+        $this->data['title'] = "Home";
+        $this->render('front/template', $this->data, true);             
+    }
+
+    function sell() {
+        Doo::loadModel("Type");
+
+        $listing = new Listing();
+
+        $opt_terbaru = array(
+                "limit" => 8,
+                "desc" => "created_at",
+                "where" => "listing_type=?",
+                "param" => array("Jual")
+                );
+        $opt_populer = array(
+                "limit" => 8,
+                "desc" => "view_count",
+                "where" => "listing_type=?",
+                "param" => array("Jual")                
+                );
+
+
+        if (isset($_GET['tipe']) && ($_GET['tipe'] > 0) && ($_GET['tipe'] < 10))
+        {
+            $opt_populer['where'] = $opt_terbaru['where'] = "type_id=? AND listing_type=?";
+            $opt_populer['param'] = $opt_terbaru['param'] = array($_GET['tipe'], "Jual");
+
+
+            $type = new Type();
+            $type->type_id = $_GET['tipe'];
+            $type->limit = "first";
+
+            $this->data['type_listing'] = $type->find();
+        }
+
+        $this->data['terbaru'] = $listing->relateMany(array("Image", "Area"), array(
+            "Listing" => $opt_terbaru
+        )); 
+
+        $this->data['populer'] = $listing->relateMany(array("Image", "Area"), array(
+            "Listing" => $opt_populer
+        ));     
+
+        $this->data['tipe'] = Doo::db()->find("Type");
+        $this->data['nav'] = "jual";
+
+        $this->data['content'] = 'home/index';
+        $this->data['title'] = "Home";
+        $this->render('front/template', $this->data, true);             
+    }
+
 
 }
 ?>

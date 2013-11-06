@@ -27,7 +27,7 @@
             <div class="container"> 
                 <!-- Logo -->       
                 <div class="logo">                                             
-                    <a href="index.html"><img id="logo-header" src="{{rootUrl}}global/img/logo.png" alt="Logo"></a>
+                    <a href="{{rootUrl}}"><img id="logo-header" src="{{rootUrl}}global/img/logo.png" alt="Logo"></a>
                 </div>
                 <!-- /logo -->        
                                             
@@ -43,24 +43,28 @@
                             
                             <div class="nav-collapse collapse">
                                 <ul class="nav">
-                                    <li class="active">
-                                        <a href="#">
+                                    <li<!-- if isset({{nav}}) && {{nav}} == "lelang" --> class="active"<!-- endif -->>
+                                        <a href="{{rootUrl}}lelang">
                                             <i class="icon-legal icon-white"></i> Lelang</a>
                                     </li>
-                                    <li>
-                                        <a href="#">
+                                    <li<!-- if isset({{nav}}) && {{nav}} == "jual" --> class="active"<!-- endif -->>
+                                        <a href="{{rootUrl}}jual">
                                             <i class="icon-shopping-cart icon-white"></i> Jual</a>
                                     </li>
-                                    <li>
-                                        <a href="#">
+                                    <li<!-- if isset({{nav}}) && {{nav}} == "sewa" --> class="active"<!-- endif -->>
+                                        <a href="{{rootUrl}}sewa">
                                             <i class="icon-home icon-white"></i> Sewa</a>
                                     </li>
-                                    <li>
-                                        <a href="#">
+                                    <li<!-- if isset({{nav}}) && {{nav}} == "cari" --> class="active"<!-- endif -->>
+                                        <a href="{{rootUrl}}cari">
+                                            <i class="icon-search icon-white"></i> Cari</a>
+                                    </li>
+                                    <li<!-- if isset({{nav}}) && {{nav}} == "faq" --> class="active"<!-- endif -->>
+                                        <a href="{{rootUrl}}faq">
                                             <i class="icon-book icon-white"></i> FAQ</a>
                                     </li>
-                                    <li>
-                                        <a href="#">
+                                    <li<!-- if isset({{nav}}) && {{nav}} == "about" --> class="active"<!-- endif -->>
+                                        <a href="{{rootUrl}}about">
                                             <i class="icon-info-sign icon-white"></i> Tentang</a>
                                     </li>
                                 </ul>
@@ -98,9 +102,9 @@
                                             <strong class="caret"></strong>
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a href="/profil">Profil</a></li>
+                                            <li><a href="/user/profil">Profil</a></li>
                                             <li><a href="/listing">Listing</a></li>
-                                            <li><a href="/histori">History</a></li>
+                                            <li><a href="/histori">Histori</a></li>
                                             <li><a href="/bid">Bid</a></li>
                                             <li><a href="/logout">Keluar</a></li>
                                         </ul>

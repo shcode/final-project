@@ -2,14 +2,27 @@
 //Home
 $route['*']['/'] = array('HomeController', 'index');
 $route['*']['/faq'] = array('HomeController', 'faq');
-$route['*']['/help'] = array('HomeController', 'help');
+$route['*']['/about'] = array('HomeController', 'about');
 $route['*']['/testimonial'] = array('HomeController', 'testimonial');
-$route['*']['/lelang'] = array('HomeController', 'auction');
-$route['*']['/lelang/:page'] = array('HomeController', 'auction');
-$route['*']['/sewa'] = array('HomeController', 'rent');
-$route['*']['/sewa/:page'] = array('HomeController', 'rent');
-$route['*']['/jual'] = array('HomeController', 'sell');
-$route['*']['/jual/:page'] = array('HomeController', 'sell');
+
+$route['*']['/lelang'] = array('ListingController', 'auction');
+$route['*']['/lelang/populer/'] = 
+$route['*']['/lelang/populer/:page'] = array('ListingController', 'pop_auction');
+$route['*']['/lelang/terbaru/'] = 
+$route['*']['/lelang/terbaru/:page'] = array('ListingController', 'new_auction');
+
+$route['*']['/sewa'] = array('ListingController', 'rent');
+$route['*']['/sewa/populer/'] = 
+$route['*']['/sewa/populer/:page'] = array('ListingController', 'pop_rent');
+$route['*']['/sewa/terbaru/'] = 
+$route['*']['/sewa/terbaru/:page'] = array('ListingController', 'new_rent');
+
+$route['*']['/jual'] = array('ListingController', 'sell');
+$route['*']['/jual/populer/'] = 
+$route['*']['/jual/populer/:page'] = array('HomeController', 'pop_sell');
+$route['*']['/jual/terbaru/'] = 
+$route['*']['/jual/terbaru/:page'] = array('HomeController', 'new_sell');
+
 $route['*']['/landingpage'] = array('HomeController', 'landing');
 
 
@@ -30,24 +43,26 @@ $route['*']['/user/konfirmasi'] = array('UserController', 'konfirmasi');
 //Listing
 $route['*']['/listing'] = array('ListingController', 'index');
 $route['*']['/listing/:page'] = array('ListingController', 'index');
-$route['*']['/listing/view/:id'] = array('ListingController', 'view_properti');
-$route['*']['/listing/edit/:id'] = array('ListingController', 'edit_properti');
-$route['*']['/listing/cancel/:id'] = array('ListingController', 'cancel_bid');
-$route['*']['/listing/bid/:id'] = array('ListingController', 'view_bid');
+$route['*']['/listing/view/:id'] = array('ListingController', 'view_listing');
+$route['*']['/listing/edit/:id'] = array('ListingController', 'edit_listing');
 $route['*']['/listing/tambah'] = array('ListingController', 'add');
 $route['*']['/listing/tambah/step2'] = array('ListingController', 'add_step2');
-$route['*']['/listing/add/up_proses'] = array('ListingController', 'upload_action');
-$route['*']['/listing/add/confirm'] = array('ListingController', 'confirmation');
-$route['*']['/listing/add/success'] = array('ListingController', 'success');
+
+//Bid
+
+$route['*']['/bid'] = 
+$route['*']['/bid/add'] = array('BidController', 'add_bid');
+$route['*']['/bid/view/:id'] = array('BidController', 'view_bid');
+$route['*']['/bid/cancel/:id'] = array('BidController', 'cancel_bid');
 
 //Search
-$route['*']['/search'] = array('SearchController', 'index');
-$route['*']['/search/result'] = array('SearchController', 'result');
-$route['*']['/search/result/:page'] = array('SearchController', 'result');
+$route['*']['/cari'] = array('SearchController', 'index');
+$route['*']['/cari/result'] = array('SearchController', 'result');
+$route['*']['/cari/result/:page'] = array('SearchController', 'result');
 
 //Search
-$route['*']['/history'] = array('HistoriController', 'index');
-$route['*']['/history/:page'] = array('HistoriController', 'index');
+$route['*']['/histori'] = array('HistoriController', 'index');
+$route['*']['/histori/:page'] = array('HistoriController', 'index');
 
 //Register
 $route['*']['/register'] = array('UserController', 'register');

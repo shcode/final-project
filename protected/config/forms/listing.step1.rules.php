@@ -21,10 +21,6 @@ return array(
         array("greaterThanOrEqual", 1, "- Input untuk Jangka Waktu salah."),
         array("optional")
     ),
-    "start_price" => array(
-        array("greaterThanOrEqual", 1, "- Input untuk Harga Awal salah."),
-        array("optional")
-    ),
     "min_bid" => array(
         array("greaterThanOrEqual", 1, "- Input untuk Minimal Bid salah."),
         array("optional")

@@ -91,7 +91,7 @@ class ListingBase extends DooModel{
     /**
      * @var tinyint Max length is 4.
      */
-    public $mad_bath;
+    public $maid_bath;
 
     /**
      * @var tinyint Max length is 1.
@@ -176,11 +176,6 @@ class ListingBase extends DooModel{
     /**
      * @var double unsigned
      */
-    public $start_price;
-
-    /**
-     * @var double unsigned
-     */
     public $buy_now;
 
     /**
@@ -220,7 +215,7 @@ class ListingBase extends DooModel{
 
     public $_table = 'listing';
     public $_primarykey = 'listing_id';
-    public $_fields = array('listing_id','title','description','address','district_id','province_id','subdistrict_id','area_id','street','house_number','zip_code','land','building','floor','bed','bath','maid_bed','mad_bath','furnished','electricity','water_source','garage','telp_line','certificate','orientate','status','longitude','latitude','view_count','type_id','user_id','price','range_time','range_value','start_price','buy_now','min_bid','start_date','end_date','open_bid','listing_type','created_at','updated_at');
+    public $_fields = array('listing_id','title','description','address','district_id','province_id','subdistrict_id','area_id','street','house_number','zip_code','land','building','floor','bed','bath','maid_bed','maid_bath','furnished','electricity','water_source','garage','telp_line','certificate','orientate','status','longitude','latitude','view_count','type_id','user_id','price','range_time','range_value','buy_now','min_bid','start_date','end_date','open_bid','listing_type','created_at','updated_at');
 
     public function getVRules() {
         return array(
@@ -316,7 +311,7 @@ class ListingBase extends DooModel{
                         array( 'optional' ),
                 ),
 
-                'mad_bath' => array(
+                'maid_bath' => array(
                         array( 'integer' ),
                         array( 'maxlength', 4 ),
                         array( 'optional' ),
@@ -407,10 +402,6 @@ class ListingBase extends DooModel{
                         array( 'integer' ),
                         array( 'min', 0 ),
                         array( 'maxlength', 10 ),
-                        array( 'optional' ),
-                ),
-
-                'start_price' => array(
                         array( 'optional' ),
                 ),
 

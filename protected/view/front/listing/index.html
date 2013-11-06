@@ -1,5 +1,5 @@
         <!--=== Content Part ===-->
-        <div class="container">	
+        <div class="container" id="container-min">	
             <!-- if isset($this->flashMessenger[0]) -->
             <div class="alert alert-<?php echo $this->flashMessenger[0];?>">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -25,6 +25,7 @@
                 </div>
                 <div class="span9">
                     <div class="headline"><h3>Daftar Properti Anda</h3></div>
+                    <!-- if isset({{listing}}) -->
                     {{pager}}
                     <div class="row-fluid">
                         <!-- loop listing -->
@@ -32,19 +33,48 @@
                             <div class="pull-left booking-img">
                                 <img alt="" src="{{rootUrl}}global/img/upload/resize/{{getName(listing' value.@Image[0].@name)}}_120x76.jpg">
                                 <ul class="unstyled">
-                                    <li><i class="icon-briefcase"></i></li>
-                                    <li><i class="icon-map-marker"></i> {{listing' value.@Area.@name}}, {{getKota(listing' value.@Area.@province_id, listing' value.@Area.@district_id)}}, {{getPropinsi(listing' value.@Area.@province_id)}}</li>
+                                    <li><i class="icon-map-marker"></i> {{first_cap(listing' value.@Area.@name)}}, {{getKota(listing' value.@province_id, listing' value.@district_id)}}, {{getPropinsi(listing' value.@province_id)}}</li>
                                 </ul>
                             </div>
                             <div style="overflow:hidden;">
-                                <h2><a href="#">{{listing' value.@title}}</a></h2>
+                                <h2><a href="{{rootUrl}}listing/view/{{listing' value.@listing_id}}">{{listing' value.@title}}</a></h2>
+                                <div>
+                                    <span> <i class="my-icon-land"></i>{{listing' value.@land}}&nbsp;</span>
+                                    <span> <i class="my-icon-bed"></i>{{listing' value.@bed}}&nbsp;</span>
+                                    <span> <i class="my-icon-bath"></i>{{listing' value.@bath}}&nbsp;</span>
+                                    <!-- if {{listing' value.@listing_type}} == "Jual" -->
+                                    <span class="label label-success">{{listing' value.@listing_type}}&nbsp;</span>
+                                    <span class="pull-right besar text-success">Rp. {{number_format(listing' value.@price, 2)}}&nbsp;</span>
+                                    <!-- elseif {{listing' value.@listing_type}} == "Sewa" -->
+                                    <span class="label label-warning">{{listing' value.@listing_type}}&nbsp;</span>
+                                    <span class="pull-right besar text-success">Rp. {{number_format(listing' value.@price, 2)}}&nbsp;</span>
+                                    <!-- else -->
+                                    <span class="label label-info">{{listing' value.@listing_type}}&nbsp;</span>
+                                    <span class="pull-right besar text-success">Rp. {{number_format(listing' value.@price, 2)}}</span>
+                                    <!-- endif -->
+                                </div>
+                                <!-- if {{listing' value.@listing_type}} == "Lelang" -->
+                                <div>
+                                    <!-- if !{{listing' value.@Bid}} -->
+                                    <span class="small pull-right label label-error">Bid tertinggi: Belum ada bid</span>
+                                    <!-- else -->
+                                    <span class="small pull-right">Bid tertinggi: Rp. {{number_format(listing' value.@Bid[0].@value, 0)}},- (<a href="{{rootUrl}}user/profil/{{getUsername(listing.@Bid[0].@user_id)}}" target="_blank">{{getUsername(listing' value.@Bid[0].@user_id)}}</a>)</span>
+                                    <!-- endif -->
+                                </div>
+                                <!-- else  -->
 
+                                <!-- endif -->
                                 <p>{{shorten(listing' value.@description)}}</p>
                             </div>
                         </div>
                         <!-- endloop -->
                     </div>
                     {{pager}}
+                    <!-- else -->
+                    <div class="row-fluid">
+                        <p>Belum ada listing yang anda upload.</p>
+                    </div>
+                    <!-- endif -->
                 </div>
             </div>
 

@@ -28,9 +28,14 @@ class BidBase extends DooModel{
      */
     public $created_at;
 
+    /**
+     * @var int Max length is 10.  unsigned.
+     */
+    public $listing_id;
+
     public $_table = 'bid';
     public $_primarykey = 'bid_id';
-    public $_fields = array('bid_id','value','user_id','status','created_at');
+    public $_fields = array('bid_id','value','user_id','status','created_at','listing_id');
 
     public function getVRules() {
         return array(
@@ -62,6 +67,13 @@ class BidBase extends DooModel{
                 'created_at' => array(
                         array( 'datetime' ),
                         array( 'notnull' ),
+                ),
+
+                'listing_id' => array(
+                        array( 'integer' ),
+                        array( 'min', 0 ),
+                        array( 'maxlength', 10 ),
+                        array( 'optional' ),
                 )
             );
     }

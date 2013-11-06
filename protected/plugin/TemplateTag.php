@@ -3,7 +3,10 @@
 //register global/PHP functions to be used with your template files
 //You can move this to common.conf.php   $config['TEMPLATE_GLOBAL_TAGS'] = array('isset', 'empty');
 //Every public static methods in TemplateTag class (or tag classes from modules) are available in templates without the need to define in TEMPLATE_GLOBAL_TAGS 
-Doo::conf()->TEMPLATE_GLOBAL_TAGS = array('upper', 'tofloat', 'sample_with_args', 'debug', 'url', 'url2', 'function_deny', 'isset', 'empty', 'formatdate', 'echo', 'shorten', 'ucwords', 'var_dump', 'getName', 'getPropinsi', 'getKota');
+Doo::conf()->TEMPLATE_GLOBAL_TAGS = array('upper', 'tofloat', 'sample_with_args', 'debug', 'url', 'url2', 
+    'function_deny', 'isset', 'empty', 'formatdate', 'echo', 'shorten', 'ucwords', 'var_dump', 'getName', 
+    'getArea', 'getPropinsi', 'getKota', 'ucwords', 'strtolower', 'first_cap', 'number_format', 'strftime', 
+    'strtotime', 'time', 'getUsername');
 
 /**
  * Define as class (optional)
@@ -17,6 +20,31 @@ function upper($str)
     return strtoupper($str);
 }
 
+function first_cap($str)
+{
+    return ucwords(strtolower($str));
+}
+
+function getArea($id)
+{
+    Doo::loadModel("Area");
+
+    $area = new Area();
+    $data = $area->getByAreaId_first($id);
+
+    return ucwords(strtolower($data->name));
+}
+
+function getUsername($id)
+{
+    Doo::loadModel("User");
+
+    $area = new User();
+    $data = $area->getByUserId_first($id);
+
+    return strtolower($data->username);
+}
+
 function getPropinsi($id)
 {
     Doo::loadModel("Area");
@@ -24,7 +52,7 @@ function getPropinsi($id)
     $area = new Area();
     $data = $area->getByLevel_ProvinceId_first('1', $id);
 
-    return $data->name;
+    return ucwords(strtolower($data->name));
 }
 
 function getKota($id, $idkota)
@@ -34,7 +62,7 @@ function getKota($id, $idkota)
     $area = new Area();
     $data = $area->getByLevel_ProvinceId_DistrictId_first('2', $id, $idkota);
 
-    return $data->name;
+    return ucwords(strtolower($data->name));
 }
 
 function getName($str)

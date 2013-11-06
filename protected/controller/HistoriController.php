@@ -1,9 +1,19 @@
 <?php
 
+Doo::loadController("BaseController");
+Doo::loadModel("Log");
+
 class HistoriController extends DooController {
 
+    var $data;
+
 	function index() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+		$log = new Log();
+		$log->user_id = $this->session->user->user_id;
+
+		$this->data['log'] = $log->find();
+
+
 	}
 
 }

@@ -1,5 +1,5 @@
         <!--=== Slider ===-->
-        <div class="slider-inner">
+        <!--div class="slider-inner">
             <div id="da-slider" class="da-slider">
                 <div class="da-slide">
                     <h2><i>CLEAN &amp; FRESH</i> <br /> <i>FULLY RESPONSIVE</i> <br /> <i>DESIGN</i></h2>
@@ -15,8 +15,8 @@
                     <span class="da-arrows-prev"></span>
                     <span class="da-arrows-next"></span>        
                 </nav>
-            </div><!--/da-slider-->
-        </div><!--/slider-->
+            </div>
+        </div><!-/slider-->
         <!--=== End Slider ===-->                 
         
         <!--=== Content Part ===-->
@@ -27,99 +27,128 @@
                 <?php echo $this->flashMessenger[1];?>
             </div>
             <!-- endif -->
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="affix-sidebar" data-spy="affix" data-offset-top="66">                    
+                        <div class="headline"><h3>Tipe Properti</h3></div>
+                        <ul class="nav nav-list bs-docs-sidenav">
+                            <li>
+                                <a href="?"><i class="icon-chevron-right pull-right" style="line-height: 1.6;"></i> Semua</a>
+                            </li>
 
-            <!-- Popular Listing -->
-            <div class="headline"><h3>Popular Listing</h3></div>
-            <ul class="thumbnails">
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/2.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-green hover-effect" href="#">Buy</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>                   
-                        </div>
-                        <h3><a class="hover-effect" href="#">Our Work</a></h3>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, justo sit amet risus etiam porta sem.</p>
+                            <!-- loop tipe -->
+                            <li>
+                                <a href="?tipe={{tipe' value.@type_id}}"><i class="icon-chevron-right pull-right" style="line-height: 1.6;"></i> {{tipe' value.@type_name}}</a>
+                            </li>
+                            <!-- endloop -->
+                        </ul>
                     </div>
-                </li>
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/3.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-red hover-effect" href="#">Auction</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>               
-                        </div>
-                        <h3><a class="hover-effect" href="#">One More Work</a></h3>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, justo sit amet risus etiam porta sem.</p>
-                    </div>
-                </li>
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/9.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-blue hover-effect" href="#">Rent</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>                   
-                        </div>
-                        <h3><a class="hover-effect" href="#">Another Work</a></h3>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, justo sit amet risus etiam porta sem.</p>
-                    </div>
-                </li>
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/10.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-green hover-effect" href="#">Buy</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>
-                        </div>
-                        <h3><a class="hover-effect" href="#">Huge Work</a></h3>
-                        <p>Surabaya, Jawa Timur</p>
-
-                    </div>
-                </li>
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/2.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-green hover-effect" href="#">Sell</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>                   
-                        </div>
-                        <h3><a class="hover-effect" href="#">Our Work</a></h3>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, justo sit amet risus etiam porta sem.</p>
-                    </div>
-                </li>
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/3.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-red hover-effect" href="#">Auction</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>               
-                        </div>
-                        <h3><a class="hover-effect" href="#">One More Work</a></h3>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, justo sit amet risus etiam porta sem.</p>
-                    </div>
-                </li>
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/9.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-blue hover-effect" href="#">Rent</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>                   
-                        </div>
-                        <h3><a class="hover-effect" href="#">Another Work</a></h3>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, justo sit amet risus etiam porta sem.</p>
-                    </div>
-                </li>
-                <li class="span3">
-                    <div class="thumbnail-style thumbnail-kenburn">
-                        <div class="thumbnail-img">
-                            <div class="overflow-hidden"><img src="{{rootUrl}}global/img/carousel/10.jpg" alt="" /></div>
-                            <span class="btn-type btn-u-green hover-effect" href="#">Sell</span>
-                            <span class="btn-price" href="#">Rp. 2.000.000,-</span>
-                        </div>
-                        <h3><a class="hover-effect" href="#">Huge Work</a></h3>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, justo sit amet risus etiam porta sem.</p>
-                    </div>
-                </li>
-            </ul><!--/thumbnails-->
-            <!-- //End Recent Works -->
+                </div>
+                <div class="span9" id="listing-thumb">                
+                    <!-- Popular Listing -->
+                    <div class="headline"><h3>Popular Listing</h3><h5 class="pull-right more">More...</h5></div>
+                    <ul class="thumbnails">
+                        <!-- if !{{terbaru}} -->
+                        Belum ada listing.
+                        <!-- endif -->
+                        <!-- loop populer -->
+                        <li class="span3">
+                            <div class="thumbnail-style thumbnail-kenburn">
+                                <div class="thumbnail-img">
+                                    <div class="overflow-hidden"><a href="{{rootUrl}}listing/view/{{listing' value.@listing_id}}"><img src="{{rootUrl}}global/img/upload/resize/{{getName(listing' value.@Image[0].@name)}}_670x423.jpg" alt="" /></a></div>
+                                    <!-- if {{listing' value.@listing_type}} == "Jual" -->
+                                        <span class="btn-type btn-u-green hover-effect" href="#">Jual</span>
+                                    <!-- elseif {{listing' value.@listing_type}} == "Sewa" -->
+                                        <span class="btn-type btn-u-red hover-effect" href="#">Sewa</span>
+                                    <!-- else -->
+                                        <span class="btn-type btn-u-red hover-effect" href="#">Lelang</span>
+                                    <!-- endif -->
+                                    <span class="btn-price" href="#">Rp. {{number_format(listing' value.@price, 0)}},-  </span>
+                                </div>
+                                <div class="pull-rgt" style="margin-top: 5px">
+                                    <span> <i class="my-icon-land"></i>{{listing' value.@land}}&nbsp;</span>
+                                    <span> <i class="my-icon-bed"></i>{{listing' value.@bed}}&nbsp;</span>
+                                    <span> <i class="my-icon-bath"></i>{{listing' value.@bath}}&nbsp;</span>
+                                    <span> <i class="icon-eye-open"></i> {{listing' value.@view_count}}&nbsp;</span>
+                                </div>
+                                <!-- if {{listing' value.@listing_type}} == "Lelang" -->
+                                    <!-- if strtotime({{listing' value.@start_date}}) > (time() - 24 * 60 * 60) -->
+                                    <p class="small">Lelang belum dimulai.
+                                    <br />Lelang akan dimulai pada {{listing.@start_date}}</p>
+                                    <!-- elseif strtotime({{listing' value.@end_date}}) < (time() - 24 * 60 * 60) -->
+                                    <p class="small">Lelang sudah ditutup.</p>
+                                    <!-- else -->
+                                    <span class="countdown" data-waktu="{{strtotime(listing' value.@end_date)}}" ></span>
+                                    <!-- endif -->
+                                <!-- endif -->                                   
+                                <h3><a class="hover-effect hoverinfo" data-toggle="tooltip" title="{{listing' value.@title}}" href="{{rootUrl}}listing/view/{{listing' value.@listing_id}}">{{shorten(listing' value.@title, 3)}}</a></h3>
+                                <p class="lokasi">{{getKota(listing' value.@province_id, listing' value.@district_id)}}, {{getPropinsi(listing' value.@province_id)}}</p>
+                            </div>
+                        </li>
+                        <!-- endloop -->
+                    </ul><!--/thumbnails-->               
+                    <!-- Popular Listing -->
+                    <div class="headline"><h3>Listing Terbaru</h3><h5 class="pull-right more">More...</h5></div>
+                    <ul class="thumbnails">
+                        <!-- if !{{terbaru}} -->
+                        Belum ada listing.
+                        <!-- endif -->
+                        <!-- loop terbaru -->
+                        <li class="span3">
+                            <div class="thumbnail-style thumbnail-kenburn">
+                                <div class="thumbnail-img">
+                                    <div class="overflow-hidden"><a href="{{rootUrl}}listing/view/{{listing' value.@listing_id}}">
+                                    <!-- if $v1->Image -->
+                                    <img src="{{rootUrl}}global/img/upload/resize/{{getName(listing' value.@Image[0].@name)}}_670x423.jpg" alt="" /></a></div>
+                                    <!-- endif -->
+                                    <!-- if {{listing' value.@listing_type}} == "Jual" -->
+                                        <span class="btn-type btn-u-green hover-effect" href="#">Jual</span>
+                                    <!-- elseif {{listing' value.@listing_type}} == "Sewa" -->
+                                        <span class="btn-type btn-u-red hover-effect" href="#">Sewa</span>
+                                    <!-- else -->
+                                        <span class="btn-type btn-u-red hover-effect" href="#">Lelang</span>
+                                        <!--span class="btn-bid" href="#">Rp. {{number_format(listing' value.@price, 2)}}</span-->
+                                    <!-- endif -->
+                                    <span class="btn-price" href="#">Rp. {{number_format(listing' value.@price, 0)}},-</span>
+                                </div>
+                                <div class="pull-rgt" style="margin-top: 5px">
+                                    <span> <i class="my-icon-land"></i>{{listing' value.@land}}&nbsp;</span>
+                                    <span> <i class="my-icon-bed"></i>{{listing' value.@bed}}&nbsp;</span>
+                                    <span> <i class="my-icon-bath"></i>{{listing' value.@bath}}&nbsp;</span>
+                                    <span> <i class="icon-eye-open"></i> {{listing' value.@view_count}}&nbsp;</span>
+                                </div>
+                                <!-- if {{listing' value.@listing_type}} == "Lelang" -->
+                                    <!-- if strtotime({{listing' value.@start_date}}) > (time() - 24 * 60 * 60) -->
+                                    <p class="small">Lelang belum dimulai.
+                                    <br />Lelang akan dimulai pada {{listing.@start_date}}</p>
+                                    <!-- elseif strtotime({{listing' value.@end_date}}) < (time() - 24 * 60 * 60) -->
+                                    <p class="small">Lelang sudah ditutup.</p>
+                                    <!-- else -->
+                                    <span class="countdown" data-waktu="{{strtotime(listing' value.@end_date)}}" ></span>
+                                    <!-- endif -->
+                                <!-- endif -->                               
+                                <h3><a class="hover-effect hoverinfo" data-toggle="tooltip" title="{{listing' value.@title}}" href="{{rootUrl}}listing/view/{{listing' value.@listing_id}}">{{shorten(listing' value.@title, 3)}}</a></h3>
+                                <p class="lokasi">{{getKota(listing' value.@province_id, listing' value.@district_id)}}, {{getPropinsi(listing' value.@province_id)}}</p>
+                            </div>
+                        </li>
+                        <!-- endloop -->                         
+                    </ul><!--/thumbnails-->
+                </div>                
+            </div>
+                <!-- //End Recent Works -->
         </div>
+        <script>
+        $(document).ready(function(){
+            $('.hoverinfo').tooltip();
+            $('#listing-thumb .countdown').each(function(){
+                $(this).countdown({
+                    until: new Date($(this).data("waktu") * 1000),
+                    compact: true, 
+                    layout: '<span class="label label-important">{dn} {dl} {hnn}{sep}{mnn}{sep}{snn}</span>'                    
+                })
+            })             
+        });      
+
+
+
+        </script>

@@ -5,15 +5,32 @@ Doo::loadController("BaseController");
 class UserController extends BaseController {
 
 	function index() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+        $user = new User();
+
+        $this->data['user'] = $user->getByUserId_first($this->session->user->user_id);
+
+
+        $this->data['content'] = 'user/index';
+        $this->data['title'] = "Profil Anda";
+        $this->render('front/template', $this->data);       
+
 	}
 
 	function view_profil() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+		$user = new User();
+
+        $user->user_id = $this->params("id");
+        $user = $user->find();
+
+        var_dump($user);
 	}
 
 	function edit_profil() {
-		echo 'You are visiting '.$_SERVER['REQUEST_URI'];
+        $user = new User();
+
+        $user->user_id = $this->params("id");
+        $user = $user->find();
+		
 	}
 
 	function user_report() {
@@ -61,33 +78,43 @@ class UserController extends BaseController {
                 $user->password = md5(Doo::conf()->SECURITY_SALT . $_POST['password']);
 
                 // tambahkan waktu dibuat
-                $user->created_at = new DooDbExpression('NOW()');
+                $now = new DooDbExpression('NOW()');
+                $user->created_at = $now;
 
                 // tambahkan kode konfirmasi untuk email
                 $key = DooTextHelper::randomName(32);
                 $user->confirmkey = $key;
 
                 // insert
-				$user->insert(); 
+				$newuser = $user->insert(); 
 
                 // send email
-                $mail = new DooMailer();
+                // $mail = new DooMailer();
 
-                $mail->addTo($_POST['email'], $_POST['name_user']);
-                $mail->setSubject("Konfirmasi akun di HunianAsri.net");
+                // $mail->addTo($_POST['email'], $_POST['name_user']);
+                // $mail->setSubject("Konfirmasi akun di HunianAsri.net");
 
-                $message = "Hi " . $_POST['username'] . "<br /><br />";
-                $message .= "Terima kasih telah melakukan pendaftaran di HunianAsri.Net.";
-                $message .= "Untuk melakukan konfirmasi akun, silakan klik link di bawah ini<br /><br />";
-                $message .= "<a href='" . Doo::conf()->APP_URL . "user/konfirmasi?username=" . $_POST['username'] . "&key=" . $key . "'>Konfirmasi</a>" . "<br />" . "<br />";
+                // $message = "Hi " . $_POST['username'] . "<br /><br />";
+                // $message .= "Terima kasih telah melakukan pendaftaran di HunianAsri.Net.";
+                // $message .= "Untuk melakukan konfirmasi akun, silakan klik link di bawah ini<br /><br />";
+                // $message .= "<a href='" . Doo::conf()->APP_URL . "user/konfirmasi?username=" . $_POST['username'] . "&key=" . $key . "'>Konfirmasi</a>" . "<br />" . "<br />";
 
-                $message .= "<p>Jika link tidak tampil, silakan salin text di bawah ini dan letakkan di browser anda:" . "<br /><br />";
-                $message .= "<a href='" . Doo::conf()->APP_URL . "user/konfirmasi?username=" . $_POST['username'] . "&key=" . $key . "'>" . Doo::conf()->APP_URL . "/user/konfirmasi?username=" . $_POST['username'] . "&key=" . $key . "</a></p>" . "<br />" . "<br />";
+                // $message .= "<p>Jika link tidak tampil, silakan salin text di bawah ini dan letakkan di browser anda:" . "<br /><br />";
+                // $message .= "<a href='" . Doo::conf()->APP_URL . "user/konfirmasi?username=" . $_POST['username'] . "&key=" . $key . "'>" . Doo::conf()->APP_URL . "/user/konfirmasi?username=" . $_POST['username'] . "&key=" . $key . "</a></p>" . "<br />" . "<br />";
 
 
-                $mail->setBodyHtml($message);
-                $mail->setFrom('donotreply@hunianasri.net', 'HunianAsri');
-                $mail->send();
+                // $mail->setBodyHtml($message);
+                // $mail->setFrom('donotreply@hunianasri.net', 'HunianAsri');
+                // $mail->send();
+
+                $log = new Log();
+                $log->user_id = $newuser;
+                $log->logs = "[user@" . $newuser . "] baru bergabung di HunianAsri.net";
+                $log->log_info = "Register Baru";
+                $log->created_at = $now;
+
+                $log->insert();
+
             }
         }
 
@@ -113,6 +140,14 @@ class UserController extends BaseController {
 
                 $this->addMessage("success");
                 $this->addMessage("Akun anda telah berhasil dikonfirmasi.");
+
+                Doo::loadCore('db/DooDbExpression');
+
+                $log = new Log();
+                $log->user_id = $user->user_id;
+                $log->logs = "[user@" . $user->user_id . "] berhasil konfirmasi akun melalui email";
+                $log->log_info = "Konfirmasi akun";
+                $log->created_at = new DooDbExpression('NOW()');             
             }
             else
             {
